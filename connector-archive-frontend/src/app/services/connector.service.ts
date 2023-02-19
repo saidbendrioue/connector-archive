@@ -6,7 +6,7 @@ import { Connector } from 'src/app/models/connector.model';
 @Injectable()
 export class ConnectorService {
 
-    BASE_URI = "localhost:8080/api/";
+    BASE_URI = "http://localhost:8080/api/";
 
     constructor(private httpClient: HttpClient) { }
 

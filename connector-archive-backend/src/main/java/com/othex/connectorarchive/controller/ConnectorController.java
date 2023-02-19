@@ -18,9 +18,9 @@ import com.othex.connectorarchive.repository.ConnectorRepository;
 
 import jakarta.validation.Valid;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/connectors")
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 public class ConnectorController {
 
     private final ConnectorRepository connectorRepository;
