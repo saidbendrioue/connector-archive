@@ -8,8 +8,8 @@ import { ConnectorService } from 'src/app/services/connector.service';
 })
 export class ConnectorComponent implements OnInit {
 
-    connectors: Connector[] = [];
-
+    connectors : Connector[] = [];
+    selectedConnectors: Connector[] = [];
     constructor(private connectorService: ConnectorService) { }
 
     ngOnInit() {

@@ -1,2 +1,62 @@
-<h1>Hello from connector page</h1>
-<h1>{{this.connectors}}</h1>
+<div class="card">
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="null"></button>
+            <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="null" [disabled]="!selectedConnectors || !selectedConnectors.length"></button>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="connectors" [rows]="10" [paginator]="true" [globalFilterFields]="['name','country.name','representative.name','status']"
+        [(selection)]="selectedConnectors" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                <h5 class="p-m-0">Manage connectors</h5>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="null" placeholder="Search..." />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th>PartNumber </th>
+                <th>Supplier </th>
+                <th>Color </th>
+                <th>Image </th>
+                <th>thumbnail </th>
+                <th>cavitiesNumber </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-connector>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="connector"></p-tableCheckbox>
+                </td>
+                <td>{{connector.partNumber}}</td>
+                <td>{{connector.supplier}}</td>
+                <td>{{connector.color}}</td>
+                <td>{{connector.image}}</td>
+                <td>{{connector.thumbnail}}</td>
+                <td>{{connector.cavitiesNumber}}</td>
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="null"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="null"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{connectors ? connectors.length : 0 }} connectors.
+            </div>
+        </ng-template>
+    </p-table>
+</div>

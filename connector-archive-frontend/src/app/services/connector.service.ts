@@ -5,13 +5,11 @@ import { Connector } from 'src/app/models/connector.model';
 
 @Injectable()
 export class ConnectorService {
+  BASE_URI = 'http://localhost:8080/api/';
 
-    BASE_URI = "http://localhost:8080/api/";
+  constructor(private httpClient: HttpClient) {}
 
-    constructor(private httpClient: HttpClient) { }
-
-    getAll(): Observable<Connector[]> {
-        return this.httpClient.get<Connector[]>(this.BASE_URI + "connectors");
-      }
-
+  getAll(): Observable<Connector[]> {
+    return this.httpClient.get<Connector[]>(this.BASE_URI + 'connectors');
+  }
 }

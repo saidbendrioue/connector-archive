@@ -58,3 +58,4 @@ public class Connector {
 	@OneToMany(mappedBy="connector", fetch = FetchType.EAGER)
 	private List<Project> projects;
 }
+
