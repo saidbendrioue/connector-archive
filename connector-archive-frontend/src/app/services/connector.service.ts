@@ -5,11 +5,27 @@ import { Connector } from 'src/app/models/connector.model';
 
 @Injectable()
 export class ConnectorService {
-  BASE_URI = 'http://localhost:8080/api/';
+  apiUrl = 'http://localhost:8080/api/connectors';
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-  getAll(): Observable<Connector[]> {
-    return this.httpClient.get<Connector[]>(this.BASE_URI + 'connectors');
+  getAllConnectors(): Observable<Connector[]> {
+    return this.http.get<Connector[]>(this.apiUrl);
+  }
+
+  getConnector(id: number): Observable<Connector> {
+    return this.http.get<Connector>(`${this.apiUrl}/${id}`);
+  }
+
+  createConnector(connector: Connector): Observable<Connector> {
+    return this.http.post<Connector>(this.apiUrl, connector);
+  }
+
+  updateConnector(connector: Connector): Observable<Connector> {
+    return this.http.put<Connector>(`${this.apiUrl}/${connector.id}`, connector);
+  }
+
+  deleteConnector(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

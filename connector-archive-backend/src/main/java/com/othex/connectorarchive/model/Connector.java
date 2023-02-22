@@ -42,6 +42,9 @@ public class Connector {
 	
 	@Column(name = "con_description")
 	private String description;
+
+	@Column(name = "con_location")
+	private String location;
 	
 	@Column(name = "con_creation_date")
 	private String creationDate;
@@ -57,5 +60,8 @@ public class Connector {
 
 	@OneToMany(mappedBy="connector", fetch = FetchType.EAGER)
 	private List<Project> projects;
+
+	@OneToMany(mappedBy="connector", fetch = FetchType.EAGER)
+	private List<Mnumber> mnumbers;
 }
 

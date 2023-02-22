@@ -1,7 +1,7 @@
 <div class="card">
     <p-toolbar styleClass="p-mb-4">
         <ng-template pTemplate="left">
-            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="null"></button>
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="connectorDialog=true"></button>
             <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="null" [disabled]="!selectedConnectors || !selectedConnectors.length"></button>
         </ng-template>
 
@@ -59,4 +59,12 @@
             </div>
         </ng-template>
     </p-table>
+</div>
+
+<!-- <p-dialog [(visible)]="connectorDialog" [style]="{width: '450px'}" header="connector Details" [modal]="true" styleClass="p-fluid">
+  <button>add</button>
+</p-dialog> -->
+
+<div class="mymodal" *ngIf="connectorDialog">
+    <div class="mycard"></div>
 </div>
