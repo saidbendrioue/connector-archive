@@ -89,7 +89,7 @@
         </div>
         <div class="p-field">
             <label for="image">Image</label>
-            <input type="text" pInputText id="image" [(ngModel)]="connector.image"/>
+            <p-fileUpload  chooseLabel="Browse" mode = "basic" name="myfile[]" [customUpload]="true" [auto]="true" (uploadHandler)="myUploader($event)"></p-fileUpload>
         </div>
 
         <div class="p-field">

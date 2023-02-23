@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Connector } from 'src/app/models/connector.model';
 import { ConnectorService } from 'src/app/services/connector.service';
+import { FileUploadService } from 'src/app/services/file-upload.service';
 
 @Component({
   templateUrl: './connector.component.html',
@@ -19,10 +20,13 @@ export class ConnectorComponent implements OnInit {
 
   submitted: boolean = false;
 
+  currentImage = {};
+
   constructor(
     private connectorService: ConnectorService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private fileUploadService: FileUploadService
   ) {}
 
   ngOnInit() {
@@ -43,12 +47,13 @@ export class ConnectorComponent implements OnInit {
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.selectedConnectors.map(connector=>connector.id).forEach((id) => {
-          if (id) {
-            alert(id);
-            this.connectorService.deleteConnector(id).subscribe();
-          }
-        });
+        this.selectedConnectors
+          .map((connector) => connector.id)
+          .forEach((id) => {
+            if (id) {
+              this.connectorService.deleteConnector(id).subscribe();
+            }
+          });
         this.connectors = this.connectors.filter(
           (val) => !this.selectedConnectors.includes(val)
         );
@@ -110,31 +115,33 @@ export class ConnectorComponent implements OnInit {
   saveConnector() {
     this.submitted = true;
 
-    if (this.connector?.partNumber?.trim()) {
-      if (this.connector.id) {
-        this.connectors[this.findIndexById(this.connector.id)] = this.connector;
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Successful',
-          detail: 'Connector Updated',
-          life: 3000,
-        });
-      } else {
-        this.connector.id = 0;
-        this.connector.image = 'connector-placeholder.svg';
-        this.connectors.push(this.connector);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Successful',
-          detail: 'Connector Created',
-          life: 3000,
-        });
-      }
-
-      this.connectors = [...this.connectors];
-      this.connectorDialog = false;
-      this.connector = {};
+    if (this.connector.id) {
+      this.connectors[this.findIndexById(this.connector.id)] = this.connector;
+      this.connector.updateDate = new Date().toISOString();
+      this.connectorService.updateConnector(this.connector).subscribe({
+        next: () => {
+            this.printSuccessMsg('Connector Updated');
+        },
+        error: () => {},
+      });
+    } else {
+      this.connector.id = 0;
+      this.connector.image = 'connector-placeholder.svg';
+      this.connector.creationDate = new Date().toISOString();
+      this.connector.updateDate = new Date().toISOString();
+      this.connectorService.addConnector(this.connector).subscribe({
+        next: (connector) => {
+          this.connectors.push(connector);
+          this.printSuccessMsg('Connector Created');
+        },
+        error: () => {
+          this.printErrorMsg('Unknown Error Occured');
+        },
+      });
     }
+
+    this.connectorDialog = false;
+    this.connector = {};
   }
 
   findIndexById(id: number): number {
@@ -146,5 +153,27 @@ export class ConnectorComponent implements OnInit {
       }
     }
     return index;
+  }
+
+  myUploader(event: any) {
+    this.currentImage = event.files[0];
+  }
+
+  printSuccessMsg(msg: string) {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Successful',
+      detail: msg,
+      life: 3000,
+    });
+  }
+
+  printErrorMsg(msg: string) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: msg,
+      life: 3000,
+    });
   }
 }

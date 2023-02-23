@@ -4,29 +4,28 @@ import { Observable } from 'rxjs';
 import { Connector } from '../models/connector.model';
 import { API_BASE_URL } from '../constants/environement';
 
-
 @Injectable({
   providedIn: 'root',
 })
 export class ConnectorService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getConnectors(): Observable<Connector[]> {
-    return this.http.get<Connector[]>(API_BASE_URL);
+    return this.http.get<Connector[]>(`${API_BASE_URL}/connectors`);
   }
 
   addConnector(connector: Connector): Observable<Connector> {
-    return this.http.post<Connector>(API_BASE_URL, connector);
+    return this.http.post<Connector>(`${API_BASE_URL}/connectors`, connector);
   }
 
   updateConnector(connector: Connector): Observable<Connector> {
-    const url = `${API_BASE_URL}/${connector.id}`;
+    const url = `${API_BASE_URL}/connectors/${connector.id}`;
     return this.http.put<Connector>(url, connector);
   }
 
   deleteConnector(id: number): Observable<Connector> {
-    const url = `${API_BASE_URL}/${id}`;
+    const url = `${API_BASE_URL}/connectors/${id}`;
     return this.http.delete<Connector>(url);
   }
 }
