@@ -15,19 +15,29 @@ export class ConnectorService {
   }
 
   addConnector(connector: Connector, file: any): Observable<Connector> {
+    connector.id = 0;
+    connector.creationDate = new Date();
+    connector.updateDate = new Date();
+
     const formData = new FormData();
     formData.append('file', file);
     formData.append('connector', JSON.stringify(connector));
+
     return this.http.post(`${API_BASE_URL}/connectors`, formData);
   }
 
-  updateConnector(connector: Connector): Observable<Connector> {
-    const url = `${API_BASE_URL}/connectors/${connector.id}`;
-    return this.http.put<Connector>(url, connector);
+  updateConnector(connector: Connector, image: any): Observable<Connector> {
+    connector.updateDate = new Date();
+    const formData = new FormData();
+    formData.append('file', image);
+    formData.append('connector', JSON.stringify(connector));
+    return this.http.put<Connector>(
+      `${API_BASE_URL}/connectors/${connector.id}`,
+      formData
+    );
   }
 
   deleteConnector(id: number): Observable<Connector> {
-    const url = `${API_BASE_URL}/connectors/${id}`;
-    return this.http.delete<Connector>(url);
+    return this.http.delete<Connector>(`${API_BASE_URL}/connectors/${id}`);
   }
 }

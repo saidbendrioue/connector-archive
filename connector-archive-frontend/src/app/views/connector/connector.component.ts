@@ -34,7 +34,7 @@ export class ConnectorComponent implements OnInit {
       this.connectors = data;
       this.connectors.forEach((connector) => {
         connector.thumbnail = this._sanitizer.bypassSecurityTrustResourceUrl(
-          'data:image/png;base64,' + connector.thumbnail
+          `data:image/png;base64,${connector.thumbnail}`
         );
       });
     });
@@ -120,29 +120,36 @@ export class ConnectorComponent implements OnInit {
   saveConnector() {
     this.submitted = true;
 
-    if (this.connector.id) {
-      this.connectors[this.findIndexById(this.connector.id)] = this.connector;
-      this.connector.updateDate = new Date();
-      this.connectorService.updateConnector(this.connector).subscribe({
-        next: () => {
-          this.printSuccessMsg('Connector Updated');
-        },
-        error: () => {},
-      });
-    } else {
-      this.connector.id = 0;
-      this.connector.image = 'connector-placeholder.svg';
-      this.connector.creationDate = new Date();
-      this.connector.updateDate = new Date();
+    if (!this.connector.id) {
       this.connectorService
         .addConnector(this.connector, this.currentImage)
         .subscribe({
           next: (connector) => {
-            connector.thumbnail = this._sanitizer.bypassSecurityTrustResourceUrl(
-              'data:image/png;base64,' + connector.thumbnail
-            );
-            this.connectors.push(connector);
+            connector.thumbnail =
+              this._sanitizer.bypassSecurityTrustResourceUrl(
+                `data:image/png;base64,${connector.thumbnail}`
+              );
             this.printSuccessMsg('Connector Created');
+            this.connectors.push(connector);
+          },
+          error: () => {
+            this.printErrorMsg('Unknown Error Occured');
+          },
+        });
+    } else {
+      this.connector.thumbnail = null;
+      this.connectorService
+        .updateConnector(this.connector, this.currentImage)
+        .subscribe({
+          next: (connector) => {
+            this.printSuccessMsg('Connector Updated');
+            if (connector.id) {
+              connector.thumbnail =
+                this._sanitizer.bypassSecurityTrustResourceUrl(
+                  `data:image/png;base64,${connector.thumbnail}`
+                );
+              this.connectors[this.findIndexById(connector.id)] = connector;
+            }
           },
           error: () => {
             this.printErrorMsg('Unknown Error Occured');

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,8 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.othex.connectorarchive.model.Connector;
 import com.othex.connectorarchive.repository.ConnectorRepository;
 import com.othex.connectorarchive.utils.FileUtils;
-
-import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -49,32 +47,41 @@ public class ConnectorController {
 
     @PostMapping
     public Connector createConnector(@RequestPart("connector") String connectorJSON,
-            @RequestPart("file") MultipartFile file) throws Exception {
+            @RequestParam(required = false) MultipartFile file) throws Exception {
         var objectMapper = new ObjectMapper();
         var connectorPOJO = objectMapper.readValue(connectorJSON, Connector.class);
         var thumbnail = FileUtils.writeFileToDirectory(file);
         connectorPOJO.setThumbnail(thumbnail);
+        connectorPOJO.setImage(file.getOriginalFilename());
         return connectorRepository.save(connectorPOJO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Connector> updateConnector(@PathVariable(value = "id") Long connectorId,
-            @Valid @RequestBody Connector connectorDetails) {
-        var connector = connectorRepository.findById(connectorId).orElse(null);
+    public ResponseEntity<Connector> updateConnector(@RequestPart("connector") String connectorJSON,
+            @RequestParam(required = false) MultipartFile file) throws Exception {
+
+        var objectMapper = new ObjectMapper();
+        var connectorPOJO = objectMapper.readValue(connectorJSON, Connector.class);
+
+        var connector = connectorRepository.findById(connectorPOJO.getId()).orElse(null);
+
+        if (file != null) {
+            var thumbnail = FileUtils.writeFileToDirectory(file);
+            connectorPOJO.setThumbnail(thumbnail);
+            connector.setImage(file.getOriginalFilename());
+        }
 
         if (connector == null) {
             return ResponseEntity.notFound().build();
         }
 
-        connector.setPartNumber(connectorDetails.getPartNumber());
-        connector.setSupplier(connectorDetails.getSupplier());
-        connector.setColor(connectorDetails.getColor());
-        connector.setImage(connectorDetails.getImage());
-        connector.setThumbnail(connectorDetails.getThumbnail());
-        connector.setCavitiesNumber(connectorDetails.getCavitiesNumber());
-        connector.setDescription(connectorDetails.getDescription());
-        connector.setCreationDate(connectorDetails.getCreationDate());
-        connector.setUpdateDate(connectorDetails.getUpdateDate());
+        connector.setPartNumber(connectorPOJO.getPartNumber());
+        connector.setSupplier(connectorPOJO.getSupplier());
+        connector.setColor(connectorPOJO.getColor());
+        connector.setCavitiesNumber(connectorPOJO.getCavitiesNumber());
+        connector.setDescription(connectorPOJO.getDescription());
+        connector.setCreationDate(connectorPOJO.getCreationDate());
+        connector.setUpdateDate(connectorPOJO.getUpdateDate());
 
         connector = connectorRepository.save(connector);
         return ResponseEntity.ok().body(connector);
@@ -89,6 +96,5 @@ public class ConnectorController {
         connectorRepository.delete(connector);
         return ResponseEntity.ok().build();
     }
-
 
 }
