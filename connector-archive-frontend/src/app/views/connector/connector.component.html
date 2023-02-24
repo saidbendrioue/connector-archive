@@ -31,15 +31,14 @@
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
                 <th pSortableColumn="id">id<p-sortIcon field="id"></p-sortIcon></th>
-                <th pSortableColumn="partNumber">partNumber<p-sortIcon field="partNumber"></p-sortIcon></th>
-                <th pSortableColumn="supplier">supplier<p-sortIcon field="supplier"></p-sortIcon></th>
-                <th pSortableColumn="color">color<p-sortIcon field="color"></p-sortIcon></th>
-                <th pSortableColumn="image">image<p-sortIcon field="image"></p-sortIcon></th>
-                <th pSortableColumn="thumbnail">thumbnail<p-sortIcon field="thumbnail"></p-sortIcon></th>
-                <th pSortableColumn="cavitiesNumber">cavitiesNumber<p-sortIcon field="cavitiesNumber"></p-sortIcon></th>
-                <th pSortableColumn="description">description<p-sortIcon field="description"></p-sortIcon></th>
-                <th pSortableColumn="creationDate">creationDate<p-sortIcon field="creationDate"></p-sortIcon></th>
-                <th pSortableColumn="updateDate">updateDate<p-sortIcon field="updateDate"></p-sortIcon></th>
+                <th pSortableColumn="partNumber">Part Number<p-sortIcon field="partNumber"></p-sortIcon></th>
+                <th pSortableColumn="supplier">Supplier<p-sortIcon field="supplier"></p-sortIcon></th>
+                <th pSortableColumn="color">Color<p-sortIcon field="color"></p-sortIcon></th>
+                <th pSortableColumn="image">Preview</th>
+                <th pSortableColumn="cavitiesNumber">Cavity Number<p-sortIcon field="cavitiesNumber"></p-sortIcon></th>
+                <th pSortableColumn="description">Description<p-sortIcon field="description"></p-sortIcon></th>
+                <th pSortableColumn="creationDate">Creation Date<p-sortIcon field="creationDate"></p-sortIcon></th>
+                <th pSortableColumn="updateDate">Update Date<p-sortIcon field="updateDate"></p-sortIcon></th>
                 <th></th>
               </tr>
         </ng-template>
@@ -52,12 +51,13 @@
                 <td>{{connector.partNumber}}</td>
                 <td>{{connector.supplier}}</td>
                 <td>{{connector.color}}</td>
-                <td>{{connector.image}}</td>
-                <td>{{connector.thumbnail}}</td>
+                <td>
+                  <img [src]="connector.thumbnail">
+                </td>
                 <td>{{connector.cavitiesNumber}}</td>
                 <td>{{connector.description}}</td>
-                <td>{{connector.creationDate}}</td>
-                <td>{{connector.updateDate}}</td>
+                <td>{{connector.creationDate | date:'dd/mm/yyyy'}}</td>
+                <td>{{connector.updateDate | date:'dd/mm/yyyy'}}</td>
                 <td>
                   <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editConnector(connector)"></button>
                   <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteConnector(connector)"></button>
@@ -88,8 +88,12 @@
             <input type="text" pInputText id="color" [(ngModel)]="connector.color"/>
         </div>
         <div class="p-field">
+            <label for="cavitiesNumber">Cavity Number</label>
+            <input type="text" pInputText id="cavitiesNumber" [(ngModel)]="connector.cavitiesNumber"/>
+        </div>
+        <div class="p-field">
             <label for="image">Image</label>
-            <p-fileUpload  chooseLabel="Browse" mode = "basic" name="myfile[]" [customUpload]="true" [auto]="true" (uploadHandler)="myUploader($event)"></p-fileUpload>
+            <p-fileUpload  chooseLabel="Browse" mode="basic" accept="image/*" name="myfile[]" [customUpload]="true" [auto]="true" (uploadHandler)="myUploader($event)"></p-fileUpload>
         </div>
 
         <div class="p-field">

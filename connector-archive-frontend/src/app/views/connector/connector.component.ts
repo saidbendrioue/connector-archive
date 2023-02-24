@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Connector } from 'src/app/models/connector.model';
 import { ConnectorService } from 'src/app/services/connector.service';
-import { FileUploadService } from 'src/app/services/file-upload.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   templateUrl: './connector.component.html',
@@ -26,13 +26,18 @@ export class ConnectorComponent implements OnInit {
     private connectorService: ConnectorService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private fileUploadService: FileUploadService
+    private _sanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {
-    this.connectorService
-      .getConnectors()
-      .subscribe((data) => (this.connectors = data));
+    this.connectorService.getConnectors().subscribe((data) => {
+      this.connectors = data;
+      this.connectors.forEach((connector) => {
+        connector.thumbnail = this._sanitizer.bypassSecurityTrustResourceUrl(
+          'data:image/png;base64,' + connector.thumbnail
+        );
+      });
+    });
   }
 
   openNew() {
@@ -117,27 +122,32 @@ export class ConnectorComponent implements OnInit {
 
     if (this.connector.id) {
       this.connectors[this.findIndexById(this.connector.id)] = this.connector;
-      this.connector.updateDate = new Date().toISOString();
+      this.connector.updateDate = new Date();
       this.connectorService.updateConnector(this.connector).subscribe({
         next: () => {
-            this.printSuccessMsg('Connector Updated');
+          this.printSuccessMsg('Connector Updated');
         },
         error: () => {},
       });
     } else {
       this.connector.id = 0;
       this.connector.image = 'connector-placeholder.svg';
-      this.connector.creationDate = new Date().toISOString();
-      this.connector.updateDate = new Date().toISOString();
-      this.connectorService.addConnector(this.connector).subscribe({
-        next: (connector) => {
-          this.connectors.push(connector);
-          this.printSuccessMsg('Connector Created');
-        },
-        error: () => {
-          this.printErrorMsg('Unknown Error Occured');
-        },
-      });
+      this.connector.creationDate = new Date();
+      this.connector.updateDate = new Date();
+      this.connectorService
+        .addConnector(this.connector, this.currentImage)
+        .subscribe({
+          next: (connector) => {
+            connector.thumbnail = this._sanitizer.bypassSecurityTrustResourceUrl(
+              'data:image/png;base64,' + connector.thumbnail
+            );
+            this.connectors.push(connector);
+            this.printSuccessMsg('Connector Created');
+          },
+          error: () => {
+            this.printErrorMsg('Unknown Error Occured');
+          },
+        });
     }
 
     this.connectorDialog = false;

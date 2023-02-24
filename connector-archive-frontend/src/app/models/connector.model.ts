@@ -4,9 +4,9 @@ export interface Connector {
     supplier?: string;
     color?: string;
     image?: string;
-    thumbnail?: string;
+    thumbnail?: any;
     cavitiesNumber?: string;
     description?: string;
-    creationDate?: string;
-    updateDate?: string;
+    creationDate?: Date;
+    updateDate?: Date;
 }

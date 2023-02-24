@@ -8,15 +8,17 @@ import { API_BASE_URL } from '../constants/environement';
   providedIn: 'root',
 })
 export class ConnectorService {
-
   constructor(private http: HttpClient) {}
 
   getConnectors(): Observable<Connector[]> {
     return this.http.get<Connector[]>(`${API_BASE_URL}/connectors`);
   }
 
-  addConnector(connector: Connector): Observable<Connector> {
-    return this.http.post<Connector>(`${API_BASE_URL}/connectors`, connector);
+  addConnector(connector: Connector, file: any): Observable<Connector> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('connector', JSON.stringify(connector));
+    return this.http.post(`${API_BASE_URL}/connectors`, formData);
   }
 
   updateConnector(connector: Connector): Observable<Connector> {
