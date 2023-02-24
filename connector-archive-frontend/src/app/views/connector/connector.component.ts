@@ -20,6 +20,8 @@ export class ConnectorComponent implements OnInit {
 
   submitted: boolean = false;
 
+  showConnectorImage: boolean = false;
+
   currentImage = {};
 
   constructor(
@@ -191,6 +193,15 @@ export class ConnectorComponent implements OnInit {
       summary: 'Error',
       detail: msg,
       life: 3000,
+    });
+  }
+
+  onThumbnailClick(imageName: string) {
+    this.connectorService.getConnectorImage(imageName).subscribe({
+      next: (blob: Blob) => {
+        this.showConnectorImage = true;
+        this.currentImage = this._sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
+      },
     });
   }
 }

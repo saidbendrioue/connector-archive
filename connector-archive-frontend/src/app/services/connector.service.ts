@@ -40,4 +40,9 @@ export class ConnectorService {
   deleteConnector(id: number): Observable<Connector> {
     return this.http.delete<Connector>(`${API_BASE_URL}/connectors/${id}`);
   }
+
+  getConnectorImage(filename: string): Observable<Blob> {
+    return this.http.get(`${API_BASE_URL}/connectors/files/${filename}`, { responseType: 'blob' });
+  }
+
 }

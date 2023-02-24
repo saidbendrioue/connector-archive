@@ -13,7 +13,7 @@
         </ng-template>
     </p-toolbar>
 
-    <p-table #dt [value]="connectors" [rows]="10" [paginator]="true" [globalFilterFields]="['id','partNumber','supplier','color','image','thumbnail','cavitiesNumber','description','creationDate','updateDate']"
+    <p-table #dt [value]="connectors" [rows]="10" [paginator]="true" [globalFilterFields]="['partNumber']"
         [(selection)]="selectedConnectors" [rowHover]="true" dataKey="id"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
@@ -52,7 +52,7 @@
                 <td>{{connector.supplier}}</td>
                 <td>{{connector.color}}</td>
                 <td>
-                  <img [src]="connector.thumbnail">
+                  <img [src]="connector.thumbnail" (click)="onThumbnailClick(connector.image)">
                 </td>
                 <td>{{connector.cavitiesNumber}}</td>
                 <td>{{connector.description}}</td>
@@ -110,3 +110,9 @@
 </p-dialog>
 
 <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+<p-dialog [(visible)]="showConnectorImage" [style]="{width: '90%'}" header="Connector Image Preview" [modal]="true" styleClass="p-fluid">
+  <td>
+    <img [src]="currentImage">
+  </td>
+</p-dialog>

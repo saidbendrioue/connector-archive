@@ -1,7 +1,15 @@
 package com.othex.connectorarchive.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -96,5 +104,19 @@ public class ConnectorController {
         connectorRepository.delete(connector);
         return ResponseEntity.ok().build();
     }
-
+    
+    @GetMapping("/files/{filename:.+}")
+    public ResponseEntity<byte[]> getFile(@PathVariable String filename) {
+        Path path = Paths.get("images", filename);
+        byte[] fileContents = null;
+        try {
+            fileContents = Files.readAllBytes(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDisposition(ContentDisposition.builder("attachment").filename(filename).build());
+        return new ResponseEntity<>(fileContents, headers, HttpStatus.OK);
+    }
 }
