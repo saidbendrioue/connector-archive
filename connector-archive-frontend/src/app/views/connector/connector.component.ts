@@ -3,6 +3,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Connector } from 'src/app/models/connector.model';
 import { ConnectorService } from 'src/app/services/connector.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ProprietyDropDownService } from 'src/app/services/propriety-drop-down.service';
 
 @Component({
   templateUrl: './connector.component.html',
@@ -24,11 +25,14 @@ export class ConnectorComponent implements OnInit {
 
   currentImage = {};
 
+  pdpValues: any[] = [];
+
   constructor(
     private connectorService: ConnectorService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private _sanitizer: DomSanitizer
+    private _sanitizer: DomSanitizer,
+    private proprietyDropDownService: ProprietyDropDownService
   ) {}
 
   ngOnInit() {
@@ -39,6 +43,14 @@ export class ConnectorComponent implements OnInit {
           `data:image/png;base64,${connector.thumbnail}`
         );
       });
+    });
+    this.proprietyDropDownService.getAll().subscribe({
+      next: (data) => {
+        this.pdpValues = data.map((e) => e.value);
+      },
+      error: (e) => {
+        alert(e?.error);
+      },
     });
   }
 
@@ -65,12 +77,7 @@ export class ConnectorComponent implements OnInit {
           (val) => !this.selectedConnectors.includes(val)
         );
         this.selectedConnectors = [];
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Successful',
-          detail: 'Connectors Deleted',
-          life: 3000,
-        });
+        this.printSuccessMsg('Connector Deleted');
       },
     });
   }
@@ -93,21 +100,9 @@ export class ConnectorComponent implements OnInit {
                 (val) => val.id !== connector.id
               );
               this.connector = {};
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Successful',
-                detail: 'Connector Deleted',
-                life: 3000,
-              });
+              this.printSuccessMsg('Connector Deleted');
             },
-            error: () => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'An unkown error occured',
-                life: 3000,
-              });
-            },
+            error: () => this.printErrorMsg('An unkown error occured'),
           });
         }
       },
@@ -133,6 +128,7 @@ export class ConnectorComponent implements OnInit {
               );
             this.printSuccessMsg('Connector Created');
             this.connectors.push(connector);
+            this.addPdpValueIfNotExist(connector);
           },
           error: () => {
             this.printErrorMsg('Unknown Error Occured');
@@ -152,6 +148,7 @@ export class ConnectorComponent implements OnInit {
                 );
               this.connectors[this.findIndexById(connector.id)] = connector;
             }
+            this.addPdpValueIfNotExist(connector);
           },
           error: () => {
             this.printErrorMsg('Unknown Error Occured');
@@ -200,8 +197,25 @@ export class ConnectorComponent implements OnInit {
     this.connectorService.getConnectorImage(imageName).subscribe({
       next: (blob: Blob) => {
         this.showConnectorImage = true;
-        this.currentImage = this._sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
+        this.currentImage = this._sanitizer.bypassSecurityTrustUrl(
+          URL.createObjectURL(blob)
+        );
       },
     });
+  }
+
+  addPdpValueIfNotExist(connector : Connector) {
+    if (this.pdpValues.indexOf(connector.color) == -1) {
+      this.proprietyDropDownService
+        .create({ type: 'color', value: connector.color })
+        .subscribe({
+          next: (pdp) => {
+            this.pdpValues.push(pdp.value);
+          },
+          error: (e) => {
+            this.printErrorMsg('Unknown Error Occured');
+          },
+        });
+    }
   }
 }

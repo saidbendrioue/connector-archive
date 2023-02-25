@@ -85,7 +85,7 @@
         </div>
         <div class="p-field">
             <label for="color">Color</label>
-            <input type="text" pInputText id="color" [(ngModel)]="connector.color"/>
+            <p-dropdown id="color" [options]="pdpValues" [(ngModel)]="connector.color" [editable]="true"></p-dropdown>
         </div>
         <div class="p-field">
             <label for="cavitiesNumber">Cavity Number</label>
