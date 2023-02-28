@@ -1,3 +1,5 @@
+import { Detection } from './detection.model';
+
 export interface Connector {
   id?: number;
   partNumber?: string;
@@ -12,4 +14,5 @@ export interface Connector {
   leak?: boolean;
   creationDate?: Date;
   updateDate?: Date;
+  detections?: Detection[];
 }

@@ -1,117 +1,98 @@
 <p-toast></p-toast>
-
-<div class="card">
-    <p-toolbar styleClass="p-mb-4">
+<div class="row p-4">
+  <div class="col-12">
+    <div class="card">
+      <p-toolbar styleClass="p-mb-4">
         <ng-template pTemplate="left">
-            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
-            <button pButton pRipple [label]="'Delete'" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedConnectors()" [disabled]="!selectedConnectors || !selectedConnectors.length"></button>
+          <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2"
+            (click)="openNew()"></button>
+          <button pButton pRipple [label]="'Delete'" icon="pi pi-trash" class="p-button-danger"
+            (click)="deleteSelectedConnectors()"
+            [disabled]="!selectedConnectors || !selectedConnectors.length"></button>
         </ng-template>
 
-        <ng-template pTemplate="right">
-            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
-            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
-        </ng-template>
-    </p-toolbar>
+        <!-- <ng-template pTemplate="right">
+                <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
+                <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+            </ng-template> -->
+      </p-toolbar>
 
-    <p-table #dt [value]="connectors" [rows]="10" [paginator]="true" [globalFilterFields]="['partNumber']"
+      <p-table #dt [value]="connectors" [rows]="10" [paginator]="true" [globalFilterFields]="['partNumber']"
         [(selection)]="selectedConnectors" [rowHover]="true" dataKey="id"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
-            <div class="p-d-flex p-ai-center p-jc-between">
-                <h5 class="p-m-0">Manage Connectors</h5>
-                <span class="p-input-icon-left">
-                    <i class="pi pi-search"></i>
-                    <input pInputText type="text" placeholder="Search..." />
-                </span>
-            </div>
+          <div class="p-d-flex p-ai-center p-jc-between">
+            <h5 class="p-m-0">Connectors list</h5>
+            <!-- <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" placeholder="Search..." />
+                    </span> -->
+          </div>
         </ng-template>
         <ng-template pTemplate="header">
-            <tr>
-                <th style="width: 3rem">
-                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                </th>
-                <th pSortableColumn="id">id<p-sortIcon field="id"></p-sortIcon></th>
-                <th pSortableColumn="partNumber">Part Number<p-sortIcon field="partNumber"></p-sortIcon></th>
-                <th pSortableColumn="supplier">Supplier<p-sortIcon field="supplier"></p-sortIcon></th>
-                <th pSortableColumn="color">Color<p-sortIcon field="color"></p-sortIcon></th>
-                <th pSortableColumn="image">Preview</th>
-                <th pSortableColumn="cavitiesNumber">Cavity Number<p-sortIcon field="cavitiesNumber"></p-sortIcon></th>
-                <th pSortableColumn="description">Description<p-sortIcon field="description"></p-sortIcon></th>
-                <th pSortableColumn="creationDate">Creation Date<p-sortIcon field="creationDate"></p-sortIcon></th>
-                <th pSortableColumn="updateDate">Update Date<p-sortIcon field="updateDate"></p-sortIcon></th>
-                <th></th>
-              </tr>
+          <tr>
+            <th style="width: 3rem">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th pSortableColumn="partNumber">Part Number<p-sortIcon field="partNumber"></p-sortIcon></th>
+            <th pSortableColumn="supplier">Supplier<p-sortIcon field="supplier"></p-sortIcon></th>
+            <th pSortableColumn="color">Color<p-sortIcon field="color"></p-sortIcon></th>
+            <th pSortableColumn="image">Preview</th>
+            <th pSortableColumn="cavitiesNumber">Cavity Number<p-sortIcon field="cavitiesNumber"></p-sortIcon></th>
+            <th pSortableColumn="description">Description<p-sortIcon field="description"></p-sortIcon></th>
+            <th></th>
+          </tr>
         </ng-template>
         <ng-template pTemplate="body" let-connector>
-            <tr>
-                <td>
-                    <p-tableCheckbox [value]="connector"></p-tableCheckbox>
-                </td>
-                <td>{{connector.id}}</td>
-                <td>{{connector.partNumber}}</td>
-                <td>{{connector.supplier}}</td>
-                <td>{{connector.color}}</td>
-                <td>
-                  <img [src]="connector.thumbnail" (click)="onThumbnailClick(connector.image)">
-                </td>
-                <td>{{connector.cavitiesNumber}}</td>
-                <td>{{connector.description}}</td>
-                <td>{{connector.creationDate | date:'dd/mm/yyyy'}}</td>
-                <td>{{connector.updateDate | date:'dd/mm/yyyy'}}</td>
-                <td>
-                  <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editConnector(connector)"></button>
-                  <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteConnector(connector)"></button>
-              </td>
-            </tr>
+          <tr (click)="currentConnector = connector">
+            <td>
+              <p-tableCheckbox [value]="connector"></p-tableCheckbox>
+            </td>
+            <td>{{connector.partNumber}}</td>
+            <td>{{connector.supplier}}</td>
+            <td>{{connector.color}}</td>
+            <td>
+              <img [src]="connector.thumbnail" (click)="onThumbnailClick(connector.image)">
+            </td>
+            <td>{{connector.cavitiesNumber}}</td>
+            <td>{{connector.description}}</td>
+            <td>
+              <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                (click)="editConnector(connector)"></button>
+              <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                (click)="deleteConnector(connector)"></button>
+            </td>
+          </tr>
         </ng-template>
-        <ng-template pTemplate="summary">
-            <div class="p-d-flex p-ai-center p-jc-between">
-                In total there are {{connectors ? connectors.length : 0 }} connectors.
-            </div>
-        </ng-template>
-    </p-table>
+      </p-table>
+    </div>
+  </div>
+  <div class="col-6" hidden>
+    <div class="row-6" style="background-color: aqua; height: 100%;">
+      <div class="container">
+        <div class="row">
+          <div class="col"><h1>{{currentConnector.partNumber}}</h1> </div>
+          <div class="col" style="background-color: yellow; height: 100%;"><img [src]="currentConnector.thumbnail"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row-6" style="background-color: red; height: 100%;">
+      <div class="container">
+        <div class="row">
+          <div class="col" style="background-color: green; height: 100%;">Divisions</div>
+          <div class="col" style="background-color: greenyellow; height: 100%;">Documents</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<p-dialog [(visible)]="connectorDialog" [style]="{width: '450px'}" header="Connector Details" [modal]="true" styleClass="p-fluid">
-    <ng-template pTemplate="content">
-        <div class="p-field">
-            <label for="name">Part Number</label>
-            <input type="text" pInputText id="partNumber" [(ngModel)]="connector.partNumber" required autofocus />
-            <small class="p-invalid" *ngIf="submitted && !connector.partNumber">Part Number is required.</small>
-        </div>
-        <div class="p-field">
-            <label for="supplier">Supplier</label>
-            <input type="text" pInputText id="supplier" [(ngModel)]="connector.supplier"/>
-        </div>
-        <div class="p-field">
-            <label for="color">Color</label>
-            <p-dropdown id="color" [options]="pdpValues" [(ngModel)]="connector.color" [editable]="true"></p-dropdown>
-        </div>
-        <div class="p-field">
-            <label for="cavitiesNumber">Cavity Number</label>
-            <input type="text" pInputText id="cavitiesNumber" [(ngModel)]="connector.cavitiesNumber"/>
-        </div>
-        <div class="p-field">
-            <label for="image">Image</label>
-            <p-fileUpload  chooseLabel="Browse" mode="basic" accept="image/*" name="myfile[]" [customUpload]="true" [auto]="true" (uploadHandler)="myUploader($event)"></p-fileUpload>
-        </div>
-
-        <div class="p-field">
-            <label for="description">Description</label>
-            <textarea id="description" pInputTextarea [(ngModel)]="connector.description" required rows="3" cols="20"></textarea>
-        </div>
-
-    </ng-template>
-
-    <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveConnector()"></button>
-    </ng-template>
-</p-dialog>
+<app-connector-stepper *ngIf="showConnectorStepper" [currentConnector]="currentConnector" [visibility]="showConnectorStepper" (onCloseEvent)="addConnector($event)"></app-connector-stepper>
 
 <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
 
-<p-dialog [(visible)]="showConnectorImage" [style]="{width: '90%'}" header="Connector Image Preview" [modal]="true" styleClass="p-fluid">
+<p-dialog [(visible)]="showConnectorImage" [style]="{width: '90%'}" header="Connector Image Preview" [modal]="true"
+  styleClass="p-fluid">
   <td>
     <img [src]="currentImage">
   </td>

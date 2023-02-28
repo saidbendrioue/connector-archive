@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.othex.connectorarchive.model.Connector;
 import com.othex.connectorarchive.repository.ConnectorRepository;
+import com.othex.connectorarchive.repository.DetectionRepository;
 import com.othex.connectorarchive.utils.FileUtils;
 
 @CrossOrigin
@@ -33,11 +35,11 @@ import com.othex.connectorarchive.utils.FileUtils;
 @RequestMapping("/api/connectors")
 public class ConnectorController {
 
-    private final ConnectorRepository connectorRepository;
-
-    public ConnectorController(ConnectorRepository connectorRepository) {
-        this.connectorRepository = connectorRepository;
-    }
+    @Autowired
+    private ConnectorRepository connectorRepository;
+    
+    @Autowired
+    private DetectionRepository detectionRepository;
 
     @GetMapping
     public List<Connector> getAllConnectors() {
@@ -61,7 +63,15 @@ public class ConnectorController {
         var thumbnail = FileUtils.writeFileToDirectory(file);
         connectorPOJO.setThumbnail(thumbnail);
         connectorPOJO.setImage(file.getOriginalFilename());
-        return connectorRepository.save(connectorPOJO);
+
+        var con = connectorRepository.save(connectorPOJO);
+        
+        for(var detection : connectorPOJO.getDetections()){
+            detection.setConnector(connectorPOJO);
+        }
+        
+        detectionRepository.saveAll(connectorPOJO.getDetections());
+        return con;
     }
 
     @PutMapping("/{id}")
@@ -70,6 +80,12 @@ public class ConnectorController {
 
         var objectMapper = new ObjectMapper();
         var connectorPOJO = objectMapper.readValue(connectorJSON, Connector.class);
+
+        for(var detection : connectorPOJO.getDetections()){
+            detection.setConnector(connectorPOJO);
+        }
+        
+        detectionRepository.saveAll(connectorPOJO.getDetections());
 
         var connector = connectorRepository.findById(connectorPOJO.getId()).orElse(null);
 

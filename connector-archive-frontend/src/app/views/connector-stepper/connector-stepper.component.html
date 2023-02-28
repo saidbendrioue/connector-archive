@@ -1,0 +1,52 @@
+<p-dialog [(visible)]="visibility" [style]="{width: '60%'}" header="Connector Details" [modal]="true"
+  styleClass="p-fluid" (onHide)="this.onCloseEvent.emit()">
+  <p-steps [model]="items" [(activeIndex)]="activeIndex" [readonly]="true"></p-steps>
+
+  <ng-template pTemplate="content">
+    <div [ngSwitch]="activeIndex">
+      <span *ngSwitchCase="0">
+        <div class="p-field">
+          <label for="name">Part Number</label>
+          <input type="text" pInputText id="partNumber" [(ngModel)]="currentConnector.partNumber" required autofocus />
+          <small class="p-invalid" *ngIf="submitted && !currentConnector.partNumber">Part Number is required.</small>
+        </div>
+        <div class="p-field">
+          <label for="supplier">Supplier</label>
+          <input type="text" pInputText id="supplier" [(ngModel)]="currentConnector.supplier" />
+        </div>
+        <div class="p-field">
+          <label for="color">Color</label>
+          <p-dropdown id="color" [options]="pdpValues" [(ngModel)]="currentConnector.color" [editable]="true"></p-dropdown>
+        </div>
+        <div class="p-field">
+          <label for="cavitiesNumber">Cavity Number</label>
+          <input type="text" pInputText id="cavitiesNumber" [(ngModel)]="currentConnector.cavitiesNumber" />
+        </div>
+        <div class="p-field">
+          <label for="image">Image</label>
+          <p-fileUpload chooseLabel="Browse" mode="basic" accept="image/*" name="myfile[]" [customUpload]="true"
+            [auto]="true" (uploadHandler)="myUploader($event)"></p-fileUpload>
+        </div>
+
+        <div class="p-field">
+          <label for="description">Description</label>
+          <textarea id="description" pInputTextarea [(ngModel)]="currentConnector.description" required rows="3"
+            cols="20"></textarea>
+        </div>
+      </span>
+      <span *ngSwitchCase="1">
+        <app-detections-table [detections]="this.currentConnector.detections??[]" (onCloseEvent)="onDetectionStepClose($event)"></app-detections-table>
+      </span>
+      <span *ngSwitchCase="2">
+        Documents
+      </span>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button pButton pRipple label="{{activeIndex == 0 ? 'Cancel' : 'Previous'}}" class="p-button-primary"
+      (click)="previousStep()"></button>
+
+    <button pButton pRipple label="Next" class="p-button-primary" (click)="nextStep()"></button>
+  </ng-template>
+</p-dialog>

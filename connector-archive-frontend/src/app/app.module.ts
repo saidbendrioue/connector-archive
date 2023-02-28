@@ -29,6 +29,9 @@ import { MessageService } from 'primeng/api';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ConnectorService } from './services/connector.service';
 import { ConnectorComponent } from './views/connector/connector.component';
+import { ConnectorStepperComponent } from './views/connector-stepper/connector-stepper.component';
+import { StepsModule } from 'primeng/steps';
+import { DetectionTableComponent } from './views/detections-table/detections-table.component';
 
 @NgModule({
   imports: [
@@ -43,6 +46,7 @@ import { ConnectorComponent } from './views/connector/connector.component';
     DropdownModule,
     ButtonModule,
     ToastModule,
+    StepsModule,
     InputTextModule,
     ProgressBarModule,
     HttpClientModule,
@@ -54,14 +58,15 @@ import { ConnectorComponent } from './views/connector/connector.component';
     InputNumberModule,
     ConfirmDialogModule,
     InputTextareaModule,
-    RouterModule.forRoot([
-      { path: '', component: ConnectorComponent }
-
-    ])
+    RouterModule.forRoot([{ path: '', component: ConnectorComponent }]),
   ],
-  declarations: [AppComponent, ConnectorComponent],
+  declarations: [
+    AppComponent,
+    ConnectorComponent,
+    ConnectorStepperComponent,
+    DetectionTableComponent,
+  ],
   bootstrap: [AppComponent],
-  providers: [ConnectorService, MessageService, ConfirmationService]
+  providers: [ConnectorService, MessageService, ConfirmationService],
 })
-
-export class AppModule { }
+export class AppModule {}

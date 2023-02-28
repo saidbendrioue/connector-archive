@@ -2,6 +2,7 @@ package com.othex.connectorarchive.model;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -60,7 +61,7 @@ public class Connector {
 	@Column(name = "con_update_date")
 	private String updateDate;
 
-	@OneToMany(mappedBy="connector", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="connector", cascade = CascadeType.ALL)
 	private List<Detection> detections;
 	
 	@OneToMany(mappedBy="connector", fetch = FetchType.EAGER)

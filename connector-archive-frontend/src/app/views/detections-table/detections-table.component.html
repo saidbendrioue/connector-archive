@@ -1,0 +1,49 @@
+<p-table [value]="detections" [tableStyle]="{'min-width': '50rem'}">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Name</th>
+      <th>Color</th>
+      <th>Description</th>
+      <th>
+        <button *ngIf="!newDetection" pButton pRipple icon="pi pi-plus" label="add" class="p-button-success"
+          (click)="addDetection()"></button>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-item>
+    <tr>
+      <td [pEditableColumn]="item.name" pEditableColumnField="code">
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText type="text" [(ngModel)]="item.name">
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{item.name}}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+
+      <td [pEditableColumn]="item.color" pEditableColumnField="code">
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText type="text" [(ngModel)]="item.color">
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{item.color}}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+
+      <td [pEditableColumn]="item.description" pEditableColumnField="code">
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText type="text" [(ngModel)]="item.description" (focusout)="changeDetection()">
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{item.description}}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
