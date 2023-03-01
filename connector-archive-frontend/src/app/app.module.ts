@@ -28,7 +28,7 @@ import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ConnectorService } from './services/connector.service';
-import { ConnectorComponent } from './views/connector/connector.component';
+import { ConnectorComponent } from './views/connector/connector-table.component';
 import { ConnectorStepperComponent } from './views/connector-stepper/connector-stepper.component';
 import { StepsModule } from 'primeng/steps';
 import { DetectionTableComponent } from './views/detections-table/detections-table.component';

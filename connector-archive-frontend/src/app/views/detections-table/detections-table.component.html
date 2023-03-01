@@ -1,11 +1,14 @@
-<p-table [value]="detections" [tableStyle]="{'min-width': '50rem'}">
+<p-table [value]="detections">
+  <ng-template pTemplate="caption">
+    <h5>Detections</h5>
+  </ng-template>
   <ng-template pTemplate="header">
     <tr>
       <th>Name</th>
       <th>Color</th>
       <th>Description</th>
       <th style="width: 4rem;">
-        <button *ngIf="!newDetection" pButton pRipple icon="pi pi-plus" label="add" class="p-button-success"
+        <button *ngIf="!newDetection" pButton pRipple icon="pi pi-plus" class="p-button-success"
           (click)="addDetection()"></button>
       </th>
     </tr>
@@ -45,7 +48,7 @@
         </p-cellEditor>
       </td>
       <td>
-        <button *ngIf="!newDetection" pButton pRipple icon="pi pi-trash" label="delete" class="p-button-error"
+        <button *ngIf="!newDetection" pButton pRipple icon="pi pi-trash" class="p-button-danger"
           (click)="deleteDetection(index)"></button>
       </td>
     </tr>

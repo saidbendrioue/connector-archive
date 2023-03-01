@@ -1,5 +1,5 @@
 <p-dialog [(visible)]="visibility" [style]="{width: '60%'}" header="Connector Details" [modal]="true"
-  styleClass="p-fluid" (onHide)="this.onCloseEvent.emit()">
+  styleClass="p-fluid" (onHide)="this.onCloseEvent.emit();visibility=false">
   <p-steps [model]="items" [(activeIndex)]="activeIndex" [readonly]="true"></p-steps>
 
   <ng-template pTemplate="content">
