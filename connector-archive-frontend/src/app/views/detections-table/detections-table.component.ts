@@ -25,4 +25,9 @@ export class DetectionTableComponent implements OnInit {
   changeDetection() {
     this.onCloseEvent.emit(this.detections);
   }
+
+  deleteDetection(index: number) {
+    this.detections.splice(index, 1);
+    this.changeDetection();
+  }
 }

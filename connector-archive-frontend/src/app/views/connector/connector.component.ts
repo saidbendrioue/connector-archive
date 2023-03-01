@@ -120,12 +120,16 @@ export class ConnectorComponent implements OnInit {
       },
     });
   }
+
   addConnector(connector: Connector) {
-    if(connector){
-      connector.thumbnail = this._sanitizer.bypassSecurityTrustResourceUrl(
-        `data:image/png;base64,${connector.thumbnail}`
-      );
+    let index = this.connectors.findIndex((item) => item.id == connector.id);
+    connector.thumbnail = this._sanitizer.bypassSecurityTrustResourceUrl(
+      `data:image/png;base64,${connector.thumbnail}`
+    );
+    if (index === -1) {
       this.connectors.push(connector);
+    } else {
+      this.connectors[index] = { ...connector };
     }
     this.showConnectorStepper = false;
   }

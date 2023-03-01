@@ -29,6 +29,8 @@ import com.othex.connectorarchive.model.Connector;
 import com.othex.connectorarchive.repository.ConnectorRepository;
 import com.othex.connectorarchive.repository.DetectionRepository;
 import com.othex.connectorarchive.utils.FileUtils;
+import org.springframework.transaction.annotation.Transactional;
+
 
 @CrossOrigin
 @RestController
@@ -63,29 +65,21 @@ public class ConnectorController {
         var thumbnail = FileUtils.writeFileToDirectory(file);
         connectorPOJO.setThumbnail(thumbnail);
         connectorPOJO.setImage(file.getOriginalFilename());
-
-        var con = connectorRepository.save(connectorPOJO);
         
         for(var detection : connectorPOJO.getDetections()){
             detection.setConnector(connectorPOJO);
         }
         
-        detectionRepository.saveAll(connectorPOJO.getDetections());
-        return con;
+        return connectorRepository.save(connectorPOJO);
     }
 
     @PutMapping("/{id}")
+    @Transactional
     public ResponseEntity<Connector> updateConnector(@RequestPart("connector") String connectorJSON,
             @RequestParam(required = false) MultipartFile file) throws Exception {
 
         var objectMapper = new ObjectMapper();
         var connectorPOJO = objectMapper.readValue(connectorJSON, Connector.class);
-
-        for(var detection : connectorPOJO.getDetections()){
-            detection.setConnector(connectorPOJO);
-        }
-        
-        detectionRepository.saveAll(connectorPOJO.getDetections());
 
         var connector = connectorRepository.findById(connectorPOJO.getId()).orElse(null);
 
@@ -106,6 +100,14 @@ public class ConnectorController {
         connector.setDescription(connectorPOJO.getDescription());
         connector.setCreationDate(connectorPOJO.getCreationDate());
         connector.setUpdateDate(connectorPOJO.getUpdateDate());
+
+        for(var detection : connectorPOJO.getDetections()){
+            detection.setConnector(connectorPOJO);
+        }
+
+        detectionRepository.deleteByConnectorId(connectorPOJO.getId());
+        
+        connector.setDetections(connectorPOJO.getDetections());
 
         connector = connectorRepository.save(connector);
         return ResponseEntity.ok().body(connector);

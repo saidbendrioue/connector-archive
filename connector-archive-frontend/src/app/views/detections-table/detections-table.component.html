@@ -4,13 +4,13 @@
       <th>Name</th>
       <th>Color</th>
       <th>Description</th>
-      <th>
+      <th style="width: 4rem;">
         <button *ngIf="!newDetection" pButton pRipple icon="pi pi-plus" label="add" class="p-button-success"
           (click)="addDetection()"></button>
       </th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-item>
+  <ng-template pTemplate="body" let-item let-index="rowIndex">
     <tr>
       <td [pEditableColumn]="item.name" pEditableColumnField="code">
         <p-cellEditor>
@@ -43,6 +43,10 @@
             {{item.description}}
           </ng-template>
         </p-cellEditor>
+      </td>
+      <td>
+        <button *ngIf="!newDetection" pButton pRipple icon="pi pi-trash" label="delete" class="p-button-error"
+          (click)="deleteDetection(index)"></button>
       </td>
     </tr>
   </ng-template>
