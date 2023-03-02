@@ -18,7 +18,7 @@
       <td [pEditableColumn]="item.name" pEditableColumnField="code">
         <p-cellEditor>
           <ng-template pTemplate="input">
-            <input pInputText type="text" [(ngModel)]="item.name">
+            <input pInputText type="text" [(ngModel)]="item.name" (focusout)="changeDetection()">
           </ng-template>
           <ng-template pTemplate="output">
             {{item.name}}
@@ -29,7 +29,7 @@
       <td [pEditableColumn]="item.color" pEditableColumnField="code">
         <p-cellEditor>
           <ng-template pTemplate="input">
-            <input pInputText type="text" [(ngModel)]="item.color">
+            <input pInputText type="text" [(ngModel)]="item.color" (focusout)="changeDetection()">
           </ng-template>
           <ng-template pTemplate="output">
             {{item.color}}

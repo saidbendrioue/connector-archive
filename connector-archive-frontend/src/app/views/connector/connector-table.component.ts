@@ -4,6 +4,8 @@ import { Connector } from 'src/app/models/connector.model';
 import { ConnectorService } from 'src/app/services/connector.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ProprietyDropDownService } from 'src/app/services/propriety-drop-down.service';
+import { Detection } from 'src/app/models/detection.model';
+import { Mnumber } from 'src/app/models/mnumber.model';
 
 @Component({
   templateUrl: './connector-table.component.html',
@@ -88,7 +90,7 @@ export class ConnectorComponent implements OnInit {
               this.currentConnector = {};
               this.printSuccessMsg('Connector Deleted');
             },
-            error: () => this.printErrorMsg('An unkown error occured'),
+            error: this.printErrorMsg,
           });
         }
       },
@@ -104,11 +106,11 @@ export class ConnectorComponent implements OnInit {
     });
   }
 
-  printErrorMsg(msg: string) {
+  printErrorMsg() {
     this.messageService.add({
       severity: 'error',
       summary: 'Error',
-      detail: msg,
+      detail: 'An unkown error occured',
       life: 3000,
     });
   }
@@ -141,10 +143,51 @@ export class ConnectorComponent implements OnInit {
   onRowClick(connector: Connector) {
     this.connectorDetailsArray = [];
     this.currentConnector = connector;
-    this.connectorDetailsArray.push({'field':'Part Number',value:`${connector.partNumber}`});
-    this.connectorDetailsArray.push({'field':'Color',value:`${connector.color}`});
-    this.connectorDetailsArray.push({'field':'Cavity Number',value:`${connector.partNumber}`});
-    this.connectorDetailsArray.push({'field':'Leak',value:`${connector.leak}`});
-    this.connectorDetailsArray.push({'field':'Gender',value:`${connector.gender}`});
+    this.connectorDetailsArray.push({
+      field: 'Part Number',
+      value: `${connector.partNumber}`,
+    });
+    this.connectorDetailsArray.push({
+      field: 'Color',
+      value: `${connector.color}`,
+    });
+    this.connectorDetailsArray.push({
+      field: 'Cavity Number',
+      value: `${connector.partNumber}`,
+    });
+    this.connectorDetailsArray.push({
+      field: 'Leak',
+      value: `${connector.leak}`,
+    });
+    this.connectorDetailsArray.push({
+      field: 'Gender',
+      value: `${connector.gender}`,
+    });
+  }
+
+  updateDetections(detections: Detection[]) {
+    this.currentConnector.detections = detections;
+    this.updateConnector();
+  }
+
+  updateMnumbers(mnumbers: Mnumber[]) {
+    this.currentConnector.mnumbers = mnumbers;
+    this.updateConnector();
+  }
+
+  updateConnector(){
+    this.currentConnector.thumbnail = null;
+    this.connectorService
+    .updateConnector(this.currentConnector, null)
+    .subscribe({
+      next: (connector) => {
+        connector.thumbnail = this._sanitizer.bypassSecurityTrustResourceUrl(
+          `data:image/png;base64,${connector.thumbnail}`
+        );
+        this.currentConnector = connector;
+        this.printSuccessMsg('Connector Updated');
+      },
+      error: this.printErrorMsg,
+    });
   }
 }

@@ -32,6 +32,9 @@ import { ConnectorComponent } from './views/connector/connector-table.component'
 import { ConnectorStepperComponent } from './views/connector-stepper/connector-stepper.component';
 import { StepsModule } from 'primeng/steps';
 import { DetectionTableComponent } from './views/detections-table/detections-table.component';
+import { MnumberTableComponent } from './views/mnumber-table/mnumber-table.component';
+import { PartNumberTableComponent } from './views/part-number-table/part-number-table.component';
+import { DocumentTableComponent } from './views/document-table/document-table.component';
 
 @NgModule({
   imports: [
@@ -65,6 +68,9 @@ import { DetectionTableComponent } from './views/detections-table/detections-tab
     ConnectorComponent,
     ConnectorStepperComponent,
     DetectionTableComponent,
+    MnumberTableComponent,
+    PartNumberTableComponent,
+    DocumentTableComponent,
   ],
   bootstrap: [AppComponent],
   providers: [ConnectorService, MessageService, ConfirmationService],

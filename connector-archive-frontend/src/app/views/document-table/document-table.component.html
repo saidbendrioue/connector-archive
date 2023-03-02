@@ -1,0 +1,20 @@
+<p-table [value]="[]">
+  <ng-template pTemplate="caption">
+    <h5>Documents List</h5>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Filename</th>
+      <th style="width: 4rem;">
+        <button pButton pRipple icon="pi pi-plus" class="p-button-success"
+          (click)="null"></button>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-item let-index="rowIndex">
+    <tr>
+      <td></td>
+      <td></td>
+    </tr>
+  </ng-template>
+</p-table>

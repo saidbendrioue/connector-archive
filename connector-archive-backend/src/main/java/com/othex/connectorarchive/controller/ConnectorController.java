@@ -2,7 +2,6 @@ package com.othex.connectorarchive.controller;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -28,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.othex.connectorarchive.model.Connector;
 import com.othex.connectorarchive.repository.ConnectorRepository;
 import com.othex.connectorarchive.repository.DetectionRepository;
+import com.othex.connectorarchive.repository.MnumberRepository;
 import com.othex.connectorarchive.utils.FileUtils;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +42,9 @@ public class ConnectorController {
     
     @Autowired
     private DetectionRepository detectionRepository;
+
+    @Autowired
+    private MnumberRepository mnumberRepository;
 
     @GetMapping
     public List<Connector> getAllConnectors() {
@@ -68,6 +71,10 @@ public class ConnectorController {
         
         for(var detection : connectorPOJO.getDetections()){
             detection.setConnector(connectorPOJO);
+        }
+        
+        for(var mnumber : connectorPOJO.getMnumbers()){
+            mnumber.setConnector(connectorPOJO);
         }
         
         return connectorRepository.save(connectorPOJO);
@@ -101,6 +108,7 @@ public class ConnectorController {
         connector.setCreationDate(connectorPOJO.getCreationDate());
         connector.setUpdateDate(connectorPOJO.getUpdateDate());
 
+        // update detections
         for(var detection : connectorPOJO.getDetections()){
             detection.setConnector(connectorPOJO);
         }
@@ -108,6 +116,15 @@ public class ConnectorController {
         detectionRepository.deleteByConnectorId(connectorPOJO.getId());
         
         connector.setDetections(connectorPOJO.getDetections());
+
+        // update Mnumbers
+        for(var mnumber : connectorPOJO.getMnumbers()){
+            mnumber.setConnector(connectorPOJO);
+        }
+
+        mnumberRepository.deleteByConnectorId(connectorPOJO.getId());
+        
+        connector.setMnumbers(connectorPOJO.getMnumbers());
 
         connector = connectorRepository.save(connector);
         return ResponseEntity.ok().body(connector);
@@ -125,7 +142,7 @@ public class ConnectorController {
     
     @GetMapping("/files/{filename:.+}")
     public ResponseEntity<byte[]> getFile(@PathVariable String filename) {
-        Path path = Paths.get("images", filename);
+        var path = Paths.get("images", filename);
         byte[] fileContents = null;
         try {
             fileContents = Files.readAllBytes(path);

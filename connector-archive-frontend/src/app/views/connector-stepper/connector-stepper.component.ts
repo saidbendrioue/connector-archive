@@ -8,8 +8,7 @@ import { ProprietyDropDownService } from 'src/app/services/propriety-drop-down.s
 
 @Component({
   selector: 'app-connector-stepper',
-  templateUrl: './connector-stepper.component.html',
-  styleUrls: ['./connector-stepper.component.scss'],
+  templateUrl: './connector-stepper.component.html'
 })
 export class ConnectorStepperComponent implements OnInit {
   @Input() visibility: boolean = false;
@@ -51,6 +50,9 @@ export class ConnectorStepperComponent implements OnInit {
   createConnector() {
     if (!this.currentConnector.detections) {
       this.currentConnector.detections = [];
+    }
+    if(!this.currentConnector.mnumbers){
+      this.currentConnector.mnumbers = [];
     }
     this.connectorService
       .addConnector(this.currentConnector, this.currentImage)

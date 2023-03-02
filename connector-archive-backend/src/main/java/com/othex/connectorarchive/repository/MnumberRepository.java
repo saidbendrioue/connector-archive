@@ -7,4 +7,5 @@ import com.othex.connectorarchive.model.Mnumber;
 
 @Repository
 public interface MnumberRepository extends JpaRepository<Mnumber, Long> {
+    void deleteByConnectorId(long connectorId);
 }

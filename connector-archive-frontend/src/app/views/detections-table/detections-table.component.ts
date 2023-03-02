@@ -3,8 +3,7 @@ import { Detection } from 'src/app/models/detection.model';
 
 @Component({
   selector: 'app-detections-table',
-  templateUrl: './detections-table.component.html',
-  styleUrls: ['./detections-table.component.scss'],
+  templateUrl: './detections-table.component.html'
 })
 export class DetectionTableComponent implements OnInit {
   newDetection: boolean = false;
