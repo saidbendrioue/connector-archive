@@ -115,18 +115,18 @@ public class ConnectorController {
 
         detectionRepository.deleteByConnectorId(connectorPOJO.getId());
         
-        connector.setDetections(connectorPOJO.getDetections());
-
         // update Mnumbers
         for(var mnumber : connectorPOJO.getMnumbers()){
             mnumber.setConnector(connectorPOJO);
         }
-
+        
         mnumberRepository.deleteByConnectorId(connectorPOJO.getId());
         
+        connector.setDetections(connectorPOJO.getDetections());
         connector.setMnumbers(connectorPOJO.getMnumbers());
-
+        
         connector = connectorRepository.save(connector);
+        
         return ResponseEntity.ok().body(connector);
     }
 

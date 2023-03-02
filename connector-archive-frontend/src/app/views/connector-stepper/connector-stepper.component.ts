@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MessageService, MenuItem } from 'primeng/api';
 import { Connector } from 'src/app/models/connector.model';
 import { Detection } from 'src/app/models/detection.model';
+import { Mnumber } from 'src/app/models/mnumber.model';
 import { ConnectorService } from 'src/app/services/connector.service';
 import { ProprietyDropDownService } from 'src/app/services/propriety-drop-down.service';
 
@@ -133,7 +134,7 @@ export class ConnectorStepperComponent implements OnInit {
     }
   }
   nextStep() {
-    if (this.activeIndex === 1) {
+    if (this.activeIndex === 2) {
       this.saveConnector();
     }
     this.activeIndex++;
@@ -142,7 +143,10 @@ export class ConnectorStepperComponent implements OnInit {
     this.activeIndex--;
   }
 
-  onDetectionStepClose($event: Detection[]) {
-    this.currentConnector.detections = $event;
+  onDetectionStepClose(detections: Detection[]) {
+    this.currentConnector.detections = detections;
+  }
+  onMnumberStepClose(mnumbers: Mnumber[]) {
+    this.currentConnector.mnumbers = mnumbers;
   }
 }

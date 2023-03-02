@@ -38,7 +38,7 @@
         <app-detections-table [detections]="this.currentConnector.detections??[]" (onCloseEvent)="onDetectionStepClose($event)"></app-detections-table>
       </span>
       <span *ngSwitchCase="2">
-        Documents
+        <app-mnumber-table [mnumbers]="this.currentConnector.mnumbers??[]" (onCloseEvent)="onMnumberStepClose($event)"></app-mnumber-table>
       </span>
     </div>
   </ng-template>
