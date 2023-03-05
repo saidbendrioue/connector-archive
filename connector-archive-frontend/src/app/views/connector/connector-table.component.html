@@ -6,11 +6,9 @@
       <p-table #dt [value]="connectors" [globalFilterFields]="['partNumber']" [(selection)]="selectedConnectors"
         [rowHover]="true" dataKey="id">
         <ng-template pTemplate="caption">
-          <div class="row">
-            <div class="col-9">
+          <div class="d-flex justify-content-between">
               <h5 class="p-m-0">Connectors list</h5>
-            </div>
-            <div class="col-3">
+            <div>
               <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2"
                 (click)="openNew()"></button>
               <button pButton pRipple [label]="'Delete'" icon="pi pi-trash" class="p-button-danger"

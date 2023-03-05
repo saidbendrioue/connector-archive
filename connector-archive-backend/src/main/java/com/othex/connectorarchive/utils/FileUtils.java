@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -39,5 +40,13 @@ public class FileUtils {
 		ImageIO.write(asBufferedImage, "png", bos);
 		return bos.toByteArray();
 	}
+
+    public static void writeFilesToDirectory(String folder, List<MultipartFile> files) throws IOException{
+		// Create a path for storing the file
+		Path path = Paths.get(folder);
+		if (!Files.exists(path)) {
+			Files.createDirectories(path);
+		}
+    }
 
 }

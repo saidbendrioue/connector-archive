@@ -2,8 +2,8 @@ package com.othex.connectorarchive.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import com.othex.connectorarchive.model.Project;
+import com.othex.connectorarchive.model.CustomerPartNumber;
 
 @Repository
-public interface ProjectRepository extends JpaRepository<Project, Long> {
+public interface CustomerPartNumberRepository extends JpaRepository<CustomerPartNumber, Long> {
 }

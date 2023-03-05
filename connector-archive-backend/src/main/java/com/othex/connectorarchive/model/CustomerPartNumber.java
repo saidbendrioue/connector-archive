@@ -15,20 +15,20 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "T_PROJECTS")
-public class Project {
+@Table(name = "T_CUSTOMER_PART_NUMBER")
+public class CustomerPartNumber {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@Column(name = "proj_name")
-	private String name;
+	@Column(name = "customer")
+	private String customerName;
 
-	@Column(name = "proj_part_number")
-	private String partNumber;
+	@Column(name = "part_number")
+	private String customerPartNumber;
 
-	@Column(name = "proj_description")
+	@Column(name = "description")
 	private String description;
 
 	@JsonIgnore

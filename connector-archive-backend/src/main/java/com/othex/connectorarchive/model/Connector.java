@@ -67,7 +67,7 @@ public class Connector {
 	private List<Document> documents;
 
 	@OneToMany(mappedBy="connector", cascade = CascadeType.ALL)
-	private List<Project> projects;
+	private List<CustomerPartNumber> customerPartNumbers;
 
 	@OneToMany(mappedBy="connector", cascade = CascadeType.ALL)
 	private List<Mnumber> mnumbers;
