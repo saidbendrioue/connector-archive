@@ -36,14 +36,6 @@
           </ng-template>
         </p-cellEditor>
       </td>
-
-      <!-- <ng-template pTemplate="selectedItem">
-        <div class="color-item color-item-value" *ngIf="selectedColor">
-            <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + selectedColor.code.toLowerCase()" />
-            <div>{{selectedcolor.name}}</div>
-        </div>
-    </ng-template> -->
-
       <td [pEditableColumn]="item.description" pEditableColumnField="code">
         <p-cellEditor>
           <ng-template pTemplate="input">

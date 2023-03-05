@@ -17,7 +17,7 @@ export class MnumberTableComponent {
 
   addMnumber() {
     this.mnumbers = [
-      { mnumber: '...', description: '...' },
+      { mnumber: '', description: '' },
       ...this.mnumbers,
     ];
   }
