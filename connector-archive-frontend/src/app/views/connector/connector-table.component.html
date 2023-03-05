@@ -1,0 +1,138 @@
+<p-toast></p-toast>
+
+<div class="row p-4 mt-2">
+  <div class="col">
+    <div class="card">
+      <p-table #dt [value]="connectors" [globalFilterFields]="['partNumber']" [(selection)]="selectedConnectors"
+        [rowHover]="true" dataKey="id">
+        <ng-template pTemplate="caption">
+          <div class="row">
+            <div class="col-9">
+              <h5 class="p-m-0">Connectors list</h5>
+            </div>
+            <div class="col-3">
+              <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2"
+                (click)="openNew()"></button>
+              <button pButton pRipple [label]="'Delete'" icon="pi pi-trash" class="p-button-danger"
+                (click)="deleteSelectedConnectors()"
+                [disabled]="!selectedConnectors || !selectedConnectors.length"></button>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 3rem">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th pSortableColumn="partNumber">Part Number<p-sortIcon field="partNumber"></p-sortIcon></th>
+            <th pSortableColumn="supplier">Supplier<p-sortIcon field="supplier"></p-sortIcon></th>
+            <th pSortableColumn="color">Color<p-sortIcon field="color"></p-sortIcon></th>
+            <th pSortableColumn="image">Preview</th>
+            <th pSortableColumn="cavitiesNumber">Cavity Number<p-sortIcon field="cavitiesNumber"></p-sortIcon></th>
+            <th pSortableColumn="description">Description<p-sortIcon field="description"></p-sortIcon></th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-connector>
+          <tr (click)="onRowClick(connector)">
+            <td>
+              <p-tableCheckbox [value]="connector"></p-tableCheckbox>
+            </td>
+            <td>{{connector.partNumber}}</td>
+            <td>{{connector.supplier}}</td>
+            <td><app-color-tag [color]="connector.color"></app-color-tag></td>
+            <td>
+              <img [src]="connector.thumbnail" (click)="onThumbnailClick(connector.image)">
+            </td>
+            <td>{{connector.cavitiesNumber}}</td>
+            <td>{{connector.description}}</td>
+            <td>
+              <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                (click)="editConnector(connector)"></button>
+              <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                (click)="deleteConnector(connector)"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+  <div class="col">
+    <div class="row">
+      <div class="container">
+        <div class="row">
+          <div class="col-6">
+            <p-table [value]="connectorDetailsArray">
+              <ng-template pTemplate="caption">
+                <h5>Connector Details</h5>
+              </ng-template>
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Field</th>
+                  <th>Value</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item>
+                <tr>
+                  <td>{{item.field}}</td>
+                  <td *ngIf="item.field === 'Color'"><app-color-tag [color]="item.value"></app-color-tag></td>
+                  <td *ngIf="item.field !== 'Color'">{{item.value}}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+          <div class="col-6">
+            <div class="row">
+              <img [src]="currentConnector.thumbnail" style="height: 15rem;">
+            </div>
+            <div class="row mt-4">
+              <h5>Description</h5>
+            </div>
+            <div class="row px-3 py-1 pb-2">
+              <textarea id="description" pInputTextarea [(ngModel)]="currentConnector.description" required rows="3"
+                cols="20" [readOnly]="true"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="container">
+        <div class="row">
+          <div class="col-6">
+            <div class="row">
+              <div class="col">
+                <app-detections-table [detections]="currentConnector.detections??[]" (onCloseEvent)="updateDetections($event)"></app-detections-table>
+              </div>
+              <div class="col mt-4">
+                <app-mnumber-table [mnumbers]="currentConnector.mnumbers??[]" (onCloseEvent)="updateMnumbers($event)"></app-mnumber-table>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="row">
+              <div class="col">
+                <app-part-number-table></app-part-number-table>
+              </div>
+              <div class="col mt-4">
+                <app-document-table></app-document-table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-connector-stepper *ngIf="showConnectorStepper" [currentConnector]="currentConnector"
+  [visibility]="showConnectorStepper" (onCloseEvent)="addConnector($event)"></app-connector-stepper>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+<p-dialog [(visible)]="showConnectorImage" [style]="{width: '90%'}" header="Connector Image Preview" [modal]="true"
+  styleClass="p-fluid">
+  <td>
+    <img [src]="currentImage">
+  </td>
+</p-dialog>

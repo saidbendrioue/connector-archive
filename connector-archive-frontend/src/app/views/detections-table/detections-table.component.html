@@ -1,0 +1,55 @@
+<p-table [value]="detections">
+  <ng-template pTemplate="caption">
+    <h5>Detections</h5>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Name</th>
+      <th>Color</th>
+      <th>Description</th>
+      <th style="width: 4rem;">
+        <button *ngIf="!newDetection" pButton pRipple icon="pi pi-plus" class="p-button-success"
+          (click)="addDetection()"></button>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-item let-index="rowIndex">
+    <tr>
+      <td [pEditableColumn]="item.name" pEditableColumnField="code">
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText placeholder="Tape detection name" type="text" [(ngModel)]="item.name" (focusout)="changeDetection()">
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{item.name}}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+
+      <td [pEditableColumn]="item.color" pEditableColumnField="code">
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText placeholder="Should be a select liste" type="text" [(ngModel)]="item.color" (focusout)="changeDetection()">
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{item.color}}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td [pEditableColumn]="item.description" pEditableColumnField="code">
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText placeholder="Tape some comment" type="text" [(ngModel)]="item.description" (focusout)="changeDetection()">
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{item.description}}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td>
+        <button *ngIf="!newDetection" pButton pRipple icon="pi pi-trash" class="p-button-danger"
+          (click)="deleteDetection(index)"></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

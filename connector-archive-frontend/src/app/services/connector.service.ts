@@ -1,17 +1,48 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Connector } from 'src/app/models/connector.model';
+import { Connector } from '../models/connector.model';
+import { API_BASE_URL } from '../constants/environement';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class ConnectorService {
+  constructor(private http: HttpClient) {}
 
-    BASE_URI = "http://localhost:8080/api/";
+  getConnectors(): Observable<Connector[]> {
+    return this.http.get<Connector[]>(`${API_BASE_URL}/connectors`);
+  }
 
-    constructor(private httpClient: HttpClient) { }
+  addConnector(connector: Connector, file: any): Observable<Connector> {
+    connector.id = 0;
+    connector.creationDate = new Date();
+    connector.updateDate = new Date();
 
-    getAll(): Observable<Connector[]> {
-        return this.httpClient.get<Connector[]>(this.BASE_URI + "connectors");
-      }
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('connector', JSON.stringify(connector));
+
+    return this.http.post(`${API_BASE_URL}/connectors`, formData);
+  }
+
+  updateConnector(connector: Connector, image: any): Observable<Connector> {
+    connector.updateDate = new Date();
+    const formData = new FormData();
+    formData.append('file', image);
+    formData.append('connector', JSON.stringify(connector));
+    return this.http.put<Connector>(
+      `${API_BASE_URL}/connectors/${connector.id}`,
+      formData
+    );
+  }
+
+  deleteConnector(id: number): Observable<Connector> {
+    return this.http.delete<Connector>(`${API_BASE_URL}/connectors/${id}`);
+  }
+
+  getConnectorImage(filename: string): Observable<Blob> {
+    return this.http.get(`${API_BASE_URL}/connectors/files/${filename}`, { responseType: 'blob' });
+  }
 
 }

@@ -16,24 +16,21 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "T_DETECTIONS")
-public class Detection {
-
-	@Id
+@Table(name = "T_MNUMBERS")
+public class Mnumber {
+    
+    @Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@Column(name = "dt_name")
-	private String name;
+    @Column(name = "m_number")
+    private String mnumber;
 
-	@Column(name = "dt_color")
-	private String color;
-
-	@Column(name = "dt_description")
-	private String description;
+    @Column(name = "m_description")
+    private String description;
 
 	@JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "dt_connector_id")
+	@JoinColumn(name = "m_connector_id")
 	private Connector connector;
 }

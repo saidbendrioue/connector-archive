@@ -33,7 +33,7 @@ public class ProprietyDropDownController {
 		return pdpRepository.findAll();
 	}
 
-	@PostMapping("/{id}")
+	@PostMapping
 	public ProprietyDropDown create(@RequestBody ProprietyDropDown proprietyDropDown) {
 		return pdpRepository.save(proprietyDropDown);
 	}
