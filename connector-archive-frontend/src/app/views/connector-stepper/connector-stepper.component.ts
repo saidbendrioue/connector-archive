@@ -20,7 +20,7 @@ export class ConnectorStepperComponent implements OnInit {
   items: MenuItem[] = [
     { label: 'Connector details' },
     { label: 'Detections' },
-    { label: 'Documents' },
+    { label: 'Mnumbers' },
     { label: 'Done' },
   ];
   activeIndex: number = 0;

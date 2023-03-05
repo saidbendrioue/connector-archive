@@ -16,7 +16,7 @@ export class DetectionTableComponent implements OnInit {
 
   addDetection() {
     this.detections = [
-      { name: '...', color: '...', description: '...' },
+      { name: '', color: '', description: '' },
       ...this.detections,
     ];
   }

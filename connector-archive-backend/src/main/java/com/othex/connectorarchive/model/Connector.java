@@ -35,6 +35,9 @@ public class Connector {
 	@Column(name = "con_image")
 	private String image;
 		
+	@Column(name = "con_coordinate")
+	private String coordinate;
+		 
 	@Lob
 	@Column(name = "con_thumbnail")
 	private byte[] thumbnail;
@@ -65,6 +68,9 @@ public class Connector {
 	
 	@OneToMany(mappedBy="connector", cascade = CascadeType.ALL)
 	private List<Document> documents;
+
+	@OneToMany(mappedBy="connector", cascade = CascadeType.ALL)
+	private List<Image> iamges;
 
 	@OneToMany(mappedBy="connector", cascade = CascadeType.ALL)
 	private List<Project> projects;

@@ -18,7 +18,7 @@
       <td [pEditableColumn]="item.name" pEditableColumnField="code">
         <p-cellEditor>
           <ng-template pTemplate="input">
-            <input pInputText type="text" [(ngModel)]="item.name" (focusout)="changeDetection()">
+            <input pInputText placeholder="Tape detection name" type="text" [(ngModel)]="item.name" (focusout)="changeDetection()">
           </ng-template>
           <ng-template pTemplate="output">
             {{item.name}}
@@ -29,7 +29,7 @@
       <td [pEditableColumn]="item.color" pEditableColumnField="code">
         <p-cellEditor>
           <ng-template pTemplate="input">
-            <input pInputText type="text" [(ngModel)]="item.color" (focusout)="changeDetection()">
+            <input pInputText placeholder="Should be a select liste" type="text" [(ngModel)]="item.color" (focusout)="changeDetection()">
           </ng-template>
           <ng-template pTemplate="output">
             {{item.color}}
@@ -37,10 +37,17 @@
         </p-cellEditor>
       </td>
 
+      <!-- <ng-template pTemplate="selectedItem">
+        <div class="color-item color-item-value" *ngIf="selectedColor">
+            <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + selectedColor.code.toLowerCase()" />
+            <div>{{selectedcolor.name}}</div>
+        </div>
+    </ng-template> -->
+
       <td [pEditableColumn]="item.description" pEditableColumnField="code">
         <p-cellEditor>
           <ng-template pTemplate="input">
-            <input pInputText type="text" [(ngModel)]="item.description" (focusout)="changeDetection()">
+            <input pInputText placeholder="Tape some comment" type="text" [(ngModel)]="item.description" (focusout)="changeDetection()">
           </ng-template>
           <ng-template pTemplate="output">
             {{item.description}}
