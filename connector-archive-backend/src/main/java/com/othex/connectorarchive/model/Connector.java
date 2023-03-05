@@ -2,12 +2,13 @@ package com.othex.connectorarchive.model;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -34,11 +35,21 @@ public class Connector {
 	@Column(name = "con_image")
 	private String image;
 		
+	@Lob
 	@Column(name = "con_thumbnail")
-	private String thumbnail;
+	private byte[] thumbnail;
 	
 	@Column(name = "con_cavities_number")
 	private String cavitiesNumber;
+	
+	@Column(name = "con_gender")
+	private String gender;
+	
+	@Column(name = "con_type")
+	private String type;
+	
+	@Column(name = "con_leak")
+	private boolean leak;
 	
 	@Column(name = "con_description")
 	private String description;
@@ -49,12 +60,15 @@ public class Connector {
 	@Column(name = "con_update_date")
 	private String updateDate;
 
-	@OneToMany(mappedBy="connector", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="connector", cascade = CascadeType.ALL)
 	private List<Detection> detections;
 	
-	@OneToMany(mappedBy="connector", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="connector", cascade = CascadeType.ALL)
 	private List<Document> documents;
 
-	@OneToMany(mappedBy="connector", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="connector", cascade = CascadeType.ALL)
 	private List<Project> projects;
+
+	@OneToMany(mappedBy="connector", cascade = CascadeType.ALL)
+	private List<Mnumber> mnumbers;
 }
