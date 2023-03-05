@@ -35,6 +35,7 @@ import { DetectionTableComponent } from './views/detections-table/detections-tab
 import { MnumberTableComponent } from './views/mnumber-table/mnumber-table.component';
 import { PartNumberTableComponent } from './views/part-number-table/part-number-table.component';
 import { DocumentTableComponent } from './views/document-table/document-table.component';
+import { ColorTagComponent } from './views/widgets/color-tag/color-tag.component';
 
 @NgModule({
   imports: [
@@ -71,6 +72,7 @@ import { DocumentTableComponent } from './views/document-table/document-table.co
     MnumberTableComponent,
     PartNumberTableComponent,
     DocumentTableComponent,
+    ColorTagComponent,
   ],
   bootstrap: [AppComponent],
   providers: [ConnectorService, MessageService, ConfirmationService],
