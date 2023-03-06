@@ -28,7 +28,7 @@ import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ConnectorService } from './services/connector.service';
-import { ConnectorComponent } from './views/connector/connector-table.component';
+import { ConnectorComponent } from './views/connector-table/connector-table.component';
 import { ConnectorStepperComponent } from './views/connector-stepper/connector-stepper.component';
 import { StepsModule } from 'primeng/steps';
 import { DetectionTableComponent } from './views/detections-table/detections-table.component';
@@ -36,6 +36,7 @@ import { MnumberTableComponent } from './views/mnumber-table/mnumber-table.compo
 import { PartNumberTableComponent } from './views/part-number-table/part-number-table.component';
 import { DocumentTableComponent } from './views/document-table/document-table.component';
 import { ColorTagComponent } from './views/widgets/color-tag/color-tag.component';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import { ColorTagComponent } from './views/widgets/color-tag/color-tag.component
     ContextMenuModule,
     DropdownModule,
     ButtonModule,
+    CheckboxModule,
     ToastModule,
     StepsModule,
     InputTextModule,

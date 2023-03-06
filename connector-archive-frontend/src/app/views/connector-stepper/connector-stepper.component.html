@@ -20,9 +20,22 @@
         </div>
         <div class="p-field">
           <label for="cavitiesNumber">Cavity Number</label>
-          <input type="text" pInputText id="cavitiesNumber" [(ngModel)]="currentConnector.cavitiesNumber" />
+          <input type="number" pInputText id="cavitiesNumber" [(ngModel)]="currentConnector.cavitiesNumber" />
         </div>
         <div class="p-field">
+          <label for="cavitiesNumber">Leak</label>
+          <div class="p-2">
+            <p-checkbox [(ngModel)]="currentConnector.leak" [binary]="true"></p-checkbox>
+          </div>
+        </div>
+        <div class="p-field">
+          <label for="cavitiesNumber">Gender</label>
+          <div class="p-2">
+            <p-radioButton name="gender" value="male" label="Male" [(ngModel)]="currentConnector.gender"></p-radioButton>
+            <p-radioButton name="gender" value="female" label="Female" [(ngModel)]="currentConnector.gender"></p-radioButton>
+          </div>
+        </div>
+          <div class="p-field">
           <label for="image">Image</label>
           <p-fileUpload chooseLabel="Browse" mode="basic" accept="image/*" name="myfile[]" [customUpload]="true"
             [auto]="true" (uploadHandler)="myUploader($event)"></p-fileUpload>
@@ -35,10 +48,16 @@
         </div>
       </span>
       <span *ngSwitchCase="1">
-        <app-detections-table [detections]="this.currentConnector.detections??[]" (onCloseEvent)="onDetectionStepClose($event)"></app-detections-table>
+        <app-detections-table [connector]="currentConnector"></app-detections-table>
       </span>
       <span *ngSwitchCase="2">
-        <app-mnumber-table [mnumbers]="this.currentConnector.mnumbers??[]" (onCloseEvent)="onMnumberStepClose($event)"></app-mnumber-table>
+        <app-mnumber-table [connector]="currentConnector"></app-mnumber-table>
+      </span>
+      <span *ngSwitchCase="3">
+        <app-part-number-table [connector]="currentConnector"></app-part-number-table>
+      </span>
+      <span *ngSwitchCase="4">
+        <app-document-table [connector]="currentConnector"></app-document-table>
       </span>
     </div>
   </ng-template>

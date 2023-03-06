@@ -19,12 +19,12 @@ import net.coobird.thumbnailator.Thumbnails;
 
 public class FileUtils {
 
-	public static byte[] writeFileToDirectory(MultipartFile file) throws IOException {
+	public static byte[] writeFileToDirectory(MultipartFile file, String folder) throws IOException {
 		// Get the filename of the uploaded file
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
 		// Create a path for storing the file
-		Path path = Paths.get("images/");
+		Path path = Paths.get(folder);
 		if (!Files.exists(path)) {
 			Files.createDirectories(path);
 		}
@@ -41,11 +41,17 @@ public class FileUtils {
 		return bos.toByteArray();
 	}
 
-    public static void writeFilesToDirectory(String folder, List<MultipartFile> files) throws IOException{
+    public static void writeFilesToDirectory(String directory, List<MultipartFile> files) throws IOException{
 		// Create a path for storing the file
-		Path path = Paths.get(folder);
+		Path path = Paths.get(directory);
 		if (!Files.exists(path)) {
 			Files.createDirectories(path);
+		}
+		// Save the files to the path
+		for(var file : files){
+			String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+			InputStream inputStream = file.getInputStream();
+			Files.copy(inputStream, path.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
 		}
     }
 

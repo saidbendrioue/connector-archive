@@ -1,32 +1,56 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Detection } from 'src/app/models/detection.model';
+import { Connector } from 'src/app/models/connector.model';
+import { ProprietyDropDownService } from 'src/app/services/propriety-drop-down.service';
 
 @Component({
   selector: 'app-detections-table',
-  templateUrl: './detections-table.component.html'
+  templateUrl: './detections-table.component.html',
 })
 export class DetectionTableComponent implements OnInit {
   newDetection: boolean = false;
-  @Input() detections: Detection[] = [];
-  @Output() onCloseEvent = new EventEmitter<Detection[]>();
+  @Input() connector: Connector = {};
+  @Output() onChange = new EventEmitter();
+  pdpValues: any[] = [];
 
-  constructor() {}
+  constructor(
+    private proprietyDropDownService: ProprietyDropDownService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.proprietyDropDownService.getAll().subscribe({
+      next: (data) => {
+        this.pdpValues = data.map((e) => e.value);
+      },
+      error: (e) => {
+        alert(e?.error);
+      },
+    });
+  }
 
   addDetection() {
-    this.detections = [
-      { name: '...', color: '...', description: '...' },
-      ...this.detections,
+    this.connector.detections = [
+      { name: '', color: '', description: '' },
+      ...(this.connector?.detections ?? []),
     ];
   }
 
+  verifyAddedDetection() {
+    for (const detection of this.connector?.detections ?? []) {
+      if (!detection.name || !detection.color || !detection.description) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   changeDetection() {
-    this.onCloseEvent.emit(this.detections);
+    if (this.verifyAddedDetection()) {
+      this.onChange.emit(this.connector?.detections);
+    }
   }
 
   deleteDetection(index: number) {
-    this.detections.splice(index, 1);
+    this.connector?.detections?.splice(index, 1);
     this.changeDetection();
   }
 }

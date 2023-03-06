@@ -6,6 +6,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ProprietyDropDownService } from 'src/app/services/propriety-drop-down.service';
 import { Detection } from 'src/app/models/detection.model';
 import { Mnumber } from 'src/app/models/mnumber.model';
+import { Doc } from 'src/app/models/doc.model';
+import { ROOT_FOLDER } from 'src/app/constants/environement';
+import { FileUploadService } from 'src/app/services/file-upload.service';
 
 @Component({
   templateUrl: './connector-table.component.html',
@@ -24,21 +27,21 @@ export class ConnectorComponent implements OnInit {
   connectorDetailsArray: any[] = [];
 
   constructor(
-    private connectorService: ConnectorService,
-    private messageService: MessageService,
-    private confirmationService: ConfirmationService,
-    private _sanitizer: DomSanitizer
+    private _connectorService: ConnectorService,
+    private _messageService: MessageService,
+    private _confirmationService: ConfirmationService,
+    private _sanitizer: DomSanitizer,
+    private _fileUploadService : FileUploadService
   ) {}
 
   ngOnInit() {
-    this.connectorService.getConnectors().subscribe((data) => {
+    this._connectorService.getConnectors().subscribe((data) => {
       this.connectors = data;
       this.connectors.forEach((connector) => {
         connector.thumbnail = this._sanitizer.bypassSecurityTrustResourceUrl(
           `data:image/png;base64,${connector.thumbnail}`
         );
       });
-      this.currentConnector = this.connectors[0] ?? {};
       this.onRowClick(this.connectors[0]);
     });
   }
@@ -49,7 +52,7 @@ export class ConnectorComponent implements OnInit {
   }
 
   deleteSelectedConnectors() {
-    this.confirmationService.confirm({
+    this._confirmationService.confirm({
       message: 'Are you sure you want to delete the selected connectors?',
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
@@ -58,7 +61,7 @@ export class ConnectorComponent implements OnInit {
           .map((connector) => connector.id)
           .forEach((id) => {
             if (id) {
-              this.connectorService.deleteConnector(id).subscribe();
+              this._connectorService.deleteConnector(id).subscribe();
             }
           });
         this.connectors = this.connectors.filter(
@@ -76,13 +79,13 @@ export class ConnectorComponent implements OnInit {
   }
 
   deleteConnector(connector: Connector) {
-    this.confirmationService.confirm({
+    this._confirmationService.confirm({
       message: 'Are you sure you want to delete ' + connector.partNumber + '?',
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         if (connector.id) {
-          this.connectorService.deleteConnector(connector.id).subscribe({
+          this._connectorService.deleteConnector(connector.id).subscribe({
             next: () => {
               this.connectors = this.connectors.filter(
                 (val) => val.id !== connector.id
@@ -98,7 +101,7 @@ export class ConnectorComponent implements OnInit {
   }
 
   printSuccessMsg(msg: string) {
-    this.messageService.add({
+    this._messageService.add({
       severity: 'success',
       summary: 'Successful',
       detail: msg,
@@ -107,7 +110,7 @@ export class ConnectorComponent implements OnInit {
   }
 
   printErrorMsg() {
-    this.messageService.add({
+    this._messageService.add({
       severity: 'error',
       summary: 'Error',
       detail: 'An unkown error occured',
@@ -115,27 +118,7 @@ export class ConnectorComponent implements OnInit {
     });
   }
 
-  onThumbnailClick(imageName: string) {
-    this.connectorService.getConnectorImage(imageName).subscribe({
-      next: (blob: Blob) => {
-        this.showConnectorImage = true;
-        this.currentImage = this._sanitizer.bypassSecurityTrustUrl(
-          URL.createObjectURL(blob)
-        );
-      },
-    });
-  }
-
   addConnector(connector: Connector) {
-    // let index = this.connectors.findIndex((item) => item.id == connector.id);
-    // if (index === -1) {
-    //   connector.thumbnail = this._sanitizer.bypassSecurityTrustResourceUrl(
-    //     `data:image/png;base64,${connector.thumbnail}`
-    //   );
-    //   this.connectors.push(connector);
-    // } else {
-    //   this.connectors[index] = { ...connector };
-    // }
     location.reload();
     this.showConnectorStepper = false;
   }
@@ -163,6 +146,14 @@ export class ConnectorComponent implements OnInit {
       field: 'Gender',
       value: `${connector.gender}`,
     });
+
+    this._fileUploadService.getFile(`${ROOT_FOLDER}/${connector.id}/${connector.image}`).subscribe({
+      next: (blob: Blob) => {
+        this.currentImage = this._sanitizer.bypassSecurityTrustUrl(
+          URL.createObjectURL(blob)
+        );
+      },
+    });
   }
 
   updateDetections(detections: Detection[]) {
@@ -174,20 +165,24 @@ export class ConnectorComponent implements OnInit {
     this.currentConnector.mnumbers = mnumbers;
     this.updateConnector();
   }
+  updateDocuments(documents: Doc[]) {
+    this.currentConnector.documents = documents;
+    this.updateConnector();
+  }
 
-  updateConnector(){
+  updateConnector() {
     this.currentConnector.thumbnail = null;
-    this.connectorService
-    .updateConnector(this.currentConnector, null)
-    .subscribe({
-      next: (connector) => {
-        connector.thumbnail = this._sanitizer.bypassSecurityTrustResourceUrl(
-          `data:image/png;base64,${connector.thumbnail}`
-        );
-        this.currentConnector = connector;
-        this.printSuccessMsg('Connector Updated');
-      },
-      error: this.printErrorMsg,
-    });
+    this._connectorService
+      .updateConnector(this.currentConnector, null)
+      .subscribe({
+        next: (connector) => {
+          connector.thumbnail = this._sanitizer.bypassSecurityTrustResourceUrl(
+            `data:image/png;base64,${connector.thumbnail}`
+          );
+          this.currentConnector = connector;
+          this.printSuccessMsg('Connector Updated');
+        },
+        error: this.printErrorMsg,
+      });
   }
 }

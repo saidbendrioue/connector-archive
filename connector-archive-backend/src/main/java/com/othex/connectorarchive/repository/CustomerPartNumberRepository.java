@@ -6,4 +6,5 @@ import com.othex.connectorarchive.model.CustomerPartNumber;
 
 @Repository
 public interface CustomerPartNumberRepository extends JpaRepository<CustomerPartNumber, Long> {
+    void deleteByConnectorId(long connectorId);
 }

@@ -9,7 +9,7 @@ import { ProprietyDropDownService } from 'src/app/services/propriety-drop-down.s
 
 @Component({
   selector: 'app-connector-stepper',
-  templateUrl: './connector-stepper.component.html'
+  templateUrl: './connector-stepper.component.html',
 })
 export class ConnectorStepperComponent implements OnInit {
   @Input() visibility: boolean = false;
@@ -20,6 +20,7 @@ export class ConnectorStepperComponent implements OnInit {
   items: MenuItem[] = [
     { label: 'Connector details' },
     { label: 'Detections' },
+    { label: 'Mnumbers' },
     { label: 'Documents' },
     { label: 'Done' },
   ];
@@ -49,12 +50,11 @@ export class ConnectorStepperComponent implements OnInit {
   }
 
   createConnector() {
-    if (!this.currentConnector.detections) {
-      this.currentConnector.detections = [];
-    }
-    if(!this.currentConnector.mnumbers){
-      this.currentConnector.mnumbers = [];
-    }
+    this.currentConnector.detections = this.currentConnector.detections ?? [];
+    this.currentConnector.mnumbers = this.currentConnector.mnumbers ?? [];
+    this.currentConnector.documents = this.currentConnector.documents ?? [];
+    this.currentConnector.customerPartNumbers = this.currentConnector.customerPartNumbers ?? [];
+
     this.connectorService
       .addConnector(this.currentConnector, this.currentImage)
       .subscribe({
@@ -134,7 +134,7 @@ export class ConnectorStepperComponent implements OnInit {
     }
   }
   nextStep() {
-    if (this.activeIndex === 2) {
+    if (this.activeIndex === 4) {
       this.saveConnector();
     }
     this.activeIndex++;

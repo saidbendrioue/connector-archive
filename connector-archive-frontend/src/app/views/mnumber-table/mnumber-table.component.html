@@ -1,4 +1,4 @@
-<p-table [value]="mnumbers">
+<p-table [value]="connector.mnumbers??[]">
   <ng-template pTemplate="caption">
     <h5>Mnumbers</h5>
   </ng-template>
@@ -17,7 +17,7 @@
       <td [pEditableColumn]="item.mnumber" pEditableColumnField="code">
         <p-cellEditor>
           <ng-template pTemplate="input">
-            <input pInputText type="text" [(ngModel)]="item.mnumber" (focusout)="changeMnumber()">
+            <input pInputText type="text" [(ngModel)]="item.mnumber" (focusout)="changeMnumber()" placeholder="Name">
           </ng-template>
           <ng-template pTemplate="output">
             {{item.mnumber}}
@@ -28,7 +28,7 @@
       <td [pEditableColumn]="item.description" pEditableColumnField="code">
         <p-cellEditor>
           <ng-template pTemplate="input">
-            <input pInputText type="text" [(ngModel)]="item.description" (focusout)="changeMnumber()">
+            <input pInputText type="text" [(ngModel)]="item.description" (focusout)="changeMnumber()" placeholder="Description">
           </ng-template>
           <ng-template pTemplate="output">
             {{item.description}}

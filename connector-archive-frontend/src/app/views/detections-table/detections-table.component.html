@@ -1,4 +1,4 @@
-<p-table [value]="detections">
+<p-table [value]="connector.detections??[]">
   <ng-template pTemplate="caption">
     <h5>Detections</h5>
   </ng-template>
@@ -18,7 +18,7 @@
       <td [pEditableColumn]="item.name" pEditableColumnField="code">
         <p-cellEditor>
           <ng-template pTemplate="input">
-            <input pInputText type="text" [(ngModel)]="item.name" (focusout)="changeDetection()">
+            <input pInputText type="text" [(ngModel)]="item.name" (focusout)="changeDetection()" placeholder="Name">
           </ng-template>
           <ng-template pTemplate="output">
             {{item.name}}
@@ -29,7 +29,7 @@
       <td [pEditableColumn]="item.color" pEditableColumnField="code">
         <p-cellEditor>
           <ng-template pTemplate="input">
-            <input pInputText type="text" [(ngModel)]="item.color" (focusout)="changeDetection()">
+            <p-dropdown id="color" [options]="pdpValues" [(ngModel)]="item.color" [editable]="true" appendTo="body"></p-dropdown>
           </ng-template>
           <ng-template pTemplate="output">
             {{item.color}}
@@ -40,7 +40,7 @@
       <td [pEditableColumn]="item.description" pEditableColumnField="code">
         <p-cellEditor>
           <ng-template pTemplate="input">
-            <input pInputText type="text" [(ngModel)]="item.description" (focusout)="changeDetection()">
+            <input pInputText type="text" [(ngModel)]="item.description" (focusout)="changeDetection()" placeholder="Description">
           </ng-template>
           <ng-template pTemplate="output">
             {{item.description}}

@@ -6,4 +6,5 @@ import com.othex.connectorarchive.model.Document;
 
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long> {
+    void deleteByConnectorId(long connectorId);
 }

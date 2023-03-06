@@ -26,7 +26,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.othex.connectorarchive.model.Connector;
 import com.othex.connectorarchive.repository.ConnectorRepository;
+import com.othex.connectorarchive.repository.CustomerPartNumberRepository;
 import com.othex.connectorarchive.repository.DetectionRepository;
+import com.othex.connectorarchive.repository.DocumentRepository;
 import com.othex.connectorarchive.repository.MnumberRepository;
 import com.othex.connectorarchive.utils.FileUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +47,12 @@ public class ConnectorController {
 
     @Autowired
     private MnumberRepository mnumberRepository;
+    
+    @Autowired
+    private DocumentRepository documentRepository;
+    
+    @Autowired
+    private CustomerPartNumberRepository customerPartNumberRepository;
 
     @GetMapping
     public List<Connector> getAllConnectors() {
@@ -65,18 +73,34 @@ public class ConnectorController {
             @RequestParam(required = false) MultipartFile file) throws Exception {
         var objectMapper = new ObjectMapper();
         var connectorPOJO = objectMapper.readValue(connectorJSON, Connector.class);
-        var thumbnail = FileUtils.writeFileToDirectory(file);
+       
+        
+        for(var item : connectorPOJO.getDetections()){
+            item.setConnector(connectorPOJO);
+        }
+        
+        for(var item : connectorPOJO.getMnumbers()){
+            item.setConnector(connectorPOJO);
+        }
+
+        for(var item : connectorPOJO.getDocuments()){
+            item.setConnector(connectorPOJO);
+        }
+        
+        for(var item : connectorPOJO.getDocuments()){
+            item.setConnector(connectorPOJO);
+        }
+        
+        for(var item : connectorPOJO.getCustomerPartNumbers()){
+            item.setConnector(connectorPOJO);
+        }
+
+        connectorPOJO = connectorRepository.save(connectorPOJO);
+
+        var thumbnail = FileUtils.writeFileToDirectory(file, String.format("connector_ressources/%s/",connectorPOJO.getId()));
         connectorPOJO.setThumbnail(thumbnail);
         connectorPOJO.setImage(file.getOriginalFilename());
-        
-        for(var detection : connectorPOJO.getDetections()){
-            detection.setConnector(connectorPOJO);
-        }
-        
-        for(var mnumber : connectorPOJO.getMnumbers()){
-            mnumber.setConnector(connectorPOJO);
-        }
-        
+
         return connectorRepository.save(connectorPOJO);
     }
 
@@ -91,7 +115,7 @@ public class ConnectorController {
         var connector = connectorRepository.findById(connectorPOJO.getId()).orElse(null);
 
         if (file != null) {
-            var thumbnail = FileUtils.writeFileToDirectory(file);
+            var thumbnail = FileUtils.writeFileToDirectory(file, String.format("connector_ressources/%s/",connectorPOJO.getId()));
             connectorPOJO.setThumbnail(thumbnail);
             connector.setImage(file.getOriginalFilename());
         }
@@ -109,22 +133,39 @@ public class ConnectorController {
         connector.setUpdateDate(connectorPOJO.getUpdateDate());
 
         // update detections
-        for(var detection : connectorPOJO.getDetections()){
-            detection.setConnector(connectorPOJO);
+        for(var item : connectorPOJO.getDetections()){
+            item.setConnector(connectorPOJO);
         }
 
         detectionRepository.deleteByConnectorId(connectorPOJO.getId());
         
         // update Mnumbers
-        for(var mnumber : connectorPOJO.getMnumbers()){
-            mnumber.setConnector(connectorPOJO);
+        for(var item : connectorPOJO.getMnumbers()){
+            item.setConnector(connectorPOJO);
         }
         
         mnumberRepository.deleteByConnectorId(connectorPOJO.getId());
+
+        // update Documents
+        for(var item : connectorPOJO.getDocuments()){
+            item.setConnector(connectorPOJO);
+        }
+        
+        documentRepository.deleteByConnectorId(connectorPOJO.getId());
+
+       
+        // update Customer PartNumbers
+        for(var item : connectorPOJO.getCustomerPartNumbers()){
+            item.setConnector(connectorPOJO);
+        }
+        
+        customerPartNumberRepository.deleteByConnectorId(connectorPOJO.getId()); 
         
         connector.setDetections(connectorPOJO.getDetections());
         connector.setMnumbers(connectorPOJO.getMnumbers());
-        
+        connector.setDocuments(connectorPOJO.getDocuments());
+        connector.setCustomerPartNumbers(connectorPOJO.getCustomerPartNumbers());
+
         connector = connectorRepository.save(connector);
         
         return ResponseEntity.ok().body(connector);
@@ -140,18 +181,4 @@ public class ConnectorController {
         return ResponseEntity.ok().build();
     }
     
-    @GetMapping("/files/{filename:.+}")
-    public ResponseEntity<byte[]> getFile(@PathVariable String filename) {
-        var path = Paths.get("images", filename);
-        byte[] fileContents = null;
-        try {
-            fileContents = Files.readAllBytes(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDisposition(ContentDisposition.builder("attachment").filename(filename).build());
-        return new ResponseEntity<>(fileContents, headers, HttpStatus.OK);
-    }
 }

@@ -1,4 +1,6 @@
+import { CustomerPartNumber } from './customerPartNumber.model';
 import { Detection } from './detection.model';
+import { Doc } from './doc.model';
 import { Mnumber } from './mnumber.model';
 
 export interface Connector {
@@ -17,4 +19,6 @@ export interface Connector {
   updateDate?: Date;
   detections?: Detection[];
   mnumbers?: Mnumber[];
+  documents?: Doc[];
+  customerPartNumbers ?: CustomerPartNumber[];
 }
