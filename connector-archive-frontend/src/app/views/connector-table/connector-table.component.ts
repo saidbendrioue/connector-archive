@@ -31,7 +31,7 @@ export class ConnectorComponent implements OnInit {
     private _messageService: MessageService,
     private _confirmationService: ConfirmationService,
     private _sanitizer: DomSanitizer,
-    private _fileUploadService : FileUploadService
+    private _fileUploadService: FileUploadService
   ) {}
 
   ngOnInit() {
@@ -42,7 +42,9 @@ export class ConnectorComponent implements OnInit {
           `data:image/png;base64,${connector.thumbnail}`
         );
       });
-      this.onRowClick(this.connectors[0]);
+      if (this.connectors[0]) {
+        this.onRowClick(this.connectors[0]);
+      }
     });
   }
 
@@ -119,7 +121,18 @@ export class ConnectorComponent implements OnInit {
   }
 
   addConnector(connector: Connector) {
-    location.reload();
+    if(connector){
+      const index = this.findIndexById(connector?.id ?? -1);
+      connector.thumbnail = this._sanitizer.bypassSecurityTrustResourceUrl(
+        `data:image/png;base64,${connector?.thumbnail}`
+      );
+      if (index > -1) {
+        this.connectors[index] = { ...connector };
+      } else {
+        this.connectors.push(connector);
+      }
+      this.onRowClick(connector);
+    }
     this.showConnectorStepper = false;
   }
 
@@ -147,13 +160,15 @@ export class ConnectorComponent implements OnInit {
       value: `${connector.gender}`,
     });
 
-    this._fileUploadService.getFile(`${ROOT_FOLDER}/${connector.id}/${connector.image}`).subscribe({
-      next: (blob: Blob) => {
-        this.currentImage = this._sanitizer.bypassSecurityTrustUrl(
-          URL.createObjectURL(blob)
-        );
-      },
-    });
+    this._fileUploadService
+      .getFile(`${ROOT_FOLDER}/${connector.id}/${connector.image}`)
+      .subscribe({
+        next: (blob: Blob) => {
+          this.currentImage = this._sanitizer.bypassSecurityTrustUrl(
+            URL.createObjectURL(blob)
+          );
+        },
+      });
   }
 
   updateDetections(detections: Detection[]) {
@@ -179,10 +194,21 @@ export class ConnectorComponent implements OnInit {
           connector.thumbnail = this._sanitizer.bypassSecurityTrustResourceUrl(
             `data:image/png;base64,${connector.thumbnail}`
           );
-          this.currentConnector = connector;
+          this.currentConnector = { ...connector };
           this.printSuccessMsg('Connector Updated');
         },
         error: this.printErrorMsg,
       });
+  }
+
+  findIndexById(id: number): number {
+    let index = -1;
+    for (let i = 0; i < this.connectors.length; i++) {
+      if (this.connectors[i].id === id) {
+        index = i;
+        break;
+      }
+    }
+    return index;
   }
 }

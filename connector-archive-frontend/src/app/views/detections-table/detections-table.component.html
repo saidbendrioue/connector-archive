@@ -29,7 +29,7 @@
       <td [pEditableColumn]="item.color" pEditableColumnField="code">
         <p-cellEditor>
           <ng-template pTemplate="input">
-            <p-dropdown id="color" [options]="pdpValues" [(ngModel)]="item.color" [editable]="true" appendTo="body"></p-dropdown>
+            <p-dropdown id="color" [options]="pdpValues" [(ngModel)]="item.color" (change)="changeDetection()" appendTo="body"></p-dropdown>
           </ng-template>
           <ng-template pTemplate="output">
             {{item.color}}

@@ -5,15 +5,19 @@ import { API_BASE_URL } from '../constants/environement';
 import { ProprietyDropDown } from '../models/propriety-dropdown.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProprietyDropDownService {
-  private apiUrl = API_BASE_URL + "/pdp";
+  private apiUrl = API_BASE_URL + '/pdp';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAll(): Observable<ProprietyDropDown[]> {
     return this.http.get<ProprietyDropDown[]>(this.apiUrl);
+  }
+
+  getByType(type: string): Observable<ProprietyDropDown[]> {
+    return this.http.get<ProprietyDropDown[]>(`${this.apiUrl}/${type}`);
   }
 
   getById(id: number): Observable<ProprietyDropDown> {

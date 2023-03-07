@@ -43,6 +43,10 @@ public class ProprietyDropDownController {
 		return pdpRepository.findById(id).orElse(null);
 	}
 
+	@GetMapping("/{type}")
+	public List<ProprietyDropDown> getByType(@PathVariable String type) {
+		return pdpRepository.findByType(type);
+	}
 	@PutMapping("/{id}")
 	public ProprietyDropDown update(@RequestBody ProprietyDropDown proprietyDropDown, @PathVariable Long id) {
 		proprietyDropDown.setId(id);

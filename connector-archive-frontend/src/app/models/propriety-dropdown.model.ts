@@ -1,5 +1,5 @@
 export interface ProprietyDropDown {
-  id?: string;
+  id?: number;
   value?: string;
   type?: string;
 }

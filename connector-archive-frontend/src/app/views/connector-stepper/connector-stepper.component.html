@@ -1,5 +1,5 @@
 <p-dialog [(visible)]="visibility" [style]="{width: '60%'}" header="Connector Details" [modal]="true"
-  styleClass="p-fluid" (onHide)="this.onCloseEvent.emit();visibility=false">
+  styleClass="p-fluid" (onHide)="this.onCloseEvent.emit();">
   <p-steps [model]="items" [(activeIndex)]="activeIndex" [readonly]="true"></p-steps>
 
   <ng-template pTemplate="content">
@@ -16,7 +16,11 @@
         </div>
         <div class="p-field">
           <label for="color">Color</label>
-          <p-dropdown id="color" [options]="pdpValues" [(ngModel)]="currentConnector.color" [editable]="true"></p-dropdown>
+          <p-dropdown id="color" [options]="getConnectorColors()" optionLabel="value" optionValue="value" [(ngModel)]="currentConnector.color"></p-dropdown>
+        </div>
+        <div class="p-field">
+          <label for="type">Type</label>
+          <p-dropdown id="color" [options]="getConnectorTypes()" optionLabel="value" optionValue="value" [(ngModel)]="currentConnector.type"></p-dropdown>
         </div>
         <div class="p-field">
           <label for="cavitiesNumber">Cavity Number</label>
@@ -66,6 +70,6 @@
     <button pButton pRipple label="{{activeIndex == 0 ? 'Cancel' : 'Previous'}}" class="p-button-primary"
       (click)="previousStep()"></button>
 
-    <button pButton pRipple label="Next" class="p-button-primary" (click)="nextStep()"></button>
+    <button pButton pRipple label="{{activeIndex == 5 ? 'Save' : 'Next'}}" class="p-button-primary" (click)="nextStep()"></button>
   </ng-template>
 </p-dialog>

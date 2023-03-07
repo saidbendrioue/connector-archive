@@ -60,7 +60,7 @@
     </div>
   </div>
   <!-- connector details -->
-  <div class="col" *ngIf="currentConnector">
+  <div class="col" *ngIf="currentConnector?.id">
     <div class="row">
       <div class="container">
         <div class="row">
@@ -82,7 +82,8 @@
                     <div [ngSwitch]="item.field">
                       <div *ngSwitchCase="'Color'"><app-color-tag [color]="item.value"></app-color-tag></div>
                       <div *ngSwitchCase="'Leak'">
-                        <p-checkbox name="leak" [(ngModel)]="item.value" [binary]="true"></p-checkbox> {{item.value}}
+                        <i *ngIf="item.value == 'true'" class="pi pi-check" style="color: green;"></i>
+                        <i *ngIf="item.value == 'false'" class="pi pi-times" style="color: red;"></i>
                       </div>
                       <div *ngSwitchDefault>{{item.value}}</div>
                     </div>
@@ -123,7 +124,8 @@
           <div class="col-6">
             <div class="row">
               <div class="col">
-                <app-part-number-table [connector]="currentConnector" (onChange)="updateConnector()"></app-part-number-table>
+                <app-part-number-table [connector]="currentConnector"
+                  (onChange)="updateConnector()"></app-part-number-table>
               </div>
               <div class="col mt-4">
                 <app-document-table [connector]="currentConnector" (onChange)="updateConnector()"></app-document-table>

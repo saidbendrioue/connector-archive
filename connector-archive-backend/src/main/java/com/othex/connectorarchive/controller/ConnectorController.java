@@ -1,16 +1,10 @@
 package com.othex.connectorarchive.controller;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +25,6 @@ import com.othex.connectorarchive.repository.DetectionRepository;
 import com.othex.connectorarchive.repository.DocumentRepository;
 import com.othex.connectorarchive.repository.MnumberRepository;
 import com.othex.connectorarchive.utils.FileUtils;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @CrossOrigin
@@ -131,6 +124,9 @@ public class ConnectorController {
         connector.setDescription(connectorPOJO.getDescription());
         connector.setCreationDate(connectorPOJO.getCreationDate());
         connector.setUpdateDate(connectorPOJO.getUpdateDate());
+        connector.setLeak(connector.isLeak());
+        connector.setGender(connector.getGender());
+        connector.setType(connector.getType());
 
         // update detections
         for(var item : connectorPOJO.getDetections()){

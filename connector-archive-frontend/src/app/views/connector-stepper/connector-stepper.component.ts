@@ -4,6 +4,7 @@ import { MessageService, MenuItem } from 'primeng/api';
 import { Connector } from 'src/app/models/connector.model';
 import { Detection } from 'src/app/models/detection.model';
 import { Mnumber } from 'src/app/models/mnumber.model';
+import { ProprietyDropDown } from 'src/app/models/propriety-dropdown.model';
 import { ConnectorService } from 'src/app/services/connector.service';
 import { ProprietyDropDownService } from 'src/app/services/propriety-drop-down.service';
 
@@ -16,11 +17,12 @@ export class ConnectorStepperComponent implements OnInit {
   @Input() currentConnector: Connector = {};
   submitted: boolean = false;
   currentImage = {};
-  pdpValues: any[] = [];
+  pdpValues: ProprietyDropDown[] = [];
   items: MenuItem[] = [
     { label: 'Connector details' },
     { label: 'Detections' },
     { label: 'Mnumbers' },
+    { label: 'Customers PartNumbers' },
     { label: 'Documents' },
     { label: 'Done' },
   ];
@@ -31,16 +33,16 @@ export class ConnectorStepperComponent implements OnInit {
   @Output() onCloseEvent = new EventEmitter<Connector>();
 
   constructor(
-    private connectorService: ConnectorService,
-    private messageService: MessageService,
+    private _connectorService: ConnectorService,
+    private _messageService: MessageService,
     private _sanitizer: DomSanitizer,
-    private proprietyDropDownService: ProprietyDropDownService
+    private _proprietyDropDownService: ProprietyDropDownService
   ) {}
 
   ngOnInit() {
-    this.proprietyDropDownService.getAll().subscribe({
+    this._proprietyDropDownService.getAll().subscribe({
       next: (data) => {
-        this.pdpValues = data.map((e) => e.value);
+        this.pdpValues = data;
       },
       error: (e) => {
         alert(e?.error);
@@ -53,13 +55,13 @@ export class ConnectorStepperComponent implements OnInit {
     this.currentConnector.detections = this.currentConnector.detections ?? [];
     this.currentConnector.mnumbers = this.currentConnector.mnumbers ?? [];
     this.currentConnector.documents = this.currentConnector.documents ?? [];
-    this.currentConnector.customerPartNumbers = this.currentConnector.customerPartNumbers ?? [];
+    this.currentConnector.customerPartNumbers =
+      this.currentConnector.customerPartNumbers ?? [];
 
-    this.connectorService
+    this._connectorService
       .addConnector(this.currentConnector, this.currentImage)
       .subscribe({
         next: (connector) => {
-          this.addPdpValueIfNotExist(connector);
           this.onCloseEvent.emit(connector);
         },
         error: () => {
@@ -79,14 +81,10 @@ export class ConnectorStepperComponent implements OnInit {
 
   updateConnector() {
     this.currentConnector.thumbnail = null;
-    this.connectorService
+    this._connectorService
       .updateConnector(this.currentConnector, this.currentImage)
       .subscribe({
         next: (connector) => {
-          connector.thumbnail = this._sanitizer.bypassSecurityTrustResourceUrl(
-            `data:image/png;base64,${connector.thumbnail}`
-          );
-          this.addPdpValueIfNotExist(connector);
           this.onCloseEvent.emit(connector);
           this.printSuccessMsg('Connector Updated');
         },
@@ -94,7 +92,6 @@ export class ConnectorStepperComponent implements OnInit {
           this.printErrorMsg('Unknown Error Occured');
         },
       });
-    this.onCloseEvent.emit(this.currentConnector);
   }
 
   myUploader(event: any) {
@@ -102,7 +99,7 @@ export class ConnectorStepperComponent implements OnInit {
   }
 
   printSuccessMsg(msg: string) {
-    this.messageService.add({
+    this._messageService.add({
       severity: 'success',
       summary: 'Successful',
       detail: msg,
@@ -111,7 +108,7 @@ export class ConnectorStepperComponent implements OnInit {
   }
 
   printErrorMsg(msg: string) {
-    this.messageService.add({
+    this._messageService.add({
       severity: 'error',
       summary: 'Error',
       detail: msg,
@@ -119,34 +116,33 @@ export class ConnectorStepperComponent implements OnInit {
     });
   }
 
-  addPdpValueIfNotExist(connector: Connector) {
-    if (this.pdpValues.indexOf(connector.color) == -1) {
-      this.proprietyDropDownService
-        .create({ type: 'color', value: connector.color })
-        .subscribe({
-          next: (pdp) => {
-            this.printSuccessMsg('Connector Created');
-          },
-          error: (e) => {
-            this.printErrorMsg('Unknown Error Occured');
-          },
-        });
-    }
-  }
   nextStep() {
     if (this.activeIndex === 4) {
       this.saveConnector();
     }
     this.activeIndex++;
   }
+
   previousStep() {
-    this.activeIndex--;
+    if (this.activeIndex === 0) {
+      this.onCloseEvent.emit();
+    } else {
+      this.activeIndex--;
+    }
   }
 
   onDetectionStepClose(detections: Detection[]) {
     this.currentConnector.detections = detections;
   }
+
   onMnumberStepClose(mnumbers: Mnumber[]) {
     this.currentConnector.mnumbers = mnumbers;
+  }
+
+  getConnectorColors() {
+    return this.pdpValues.filter((item) => item.type == 'connector_color');
+  }
+  getConnectorTypes() {
+    return this.pdpValues.filter((item) => item.type == 'connector_type');
   }
 }
