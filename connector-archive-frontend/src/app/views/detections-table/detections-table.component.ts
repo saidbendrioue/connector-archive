@@ -36,7 +36,7 @@ export class DetectionTableComponent implements OnInit {
 
   verifyAddedDetection() {
     for (const detection of this.connector?.detections ?? []) {
-      if (!detection.name || !detection.color || !detection.description) {
+      if (!detection.name || !detection.color) {
         return false;
       }
     }

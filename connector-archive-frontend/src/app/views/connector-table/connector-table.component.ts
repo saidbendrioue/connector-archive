@@ -149,7 +149,7 @@ export class ConnectorComponent implements OnInit {
     });
     this.connectorDetailsArray.push({
       field: 'Cavity Number',
-      value: `${connector.partNumber}`,
+      value: `${connector.cavitiesNumber}`,
     });
     this.connectorDetailsArray.push({
       field: 'Leak',

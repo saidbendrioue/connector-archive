@@ -24,7 +24,7 @@ export class MnumberTableComponent {
 
   verifyAddedMnumber() {
     for (const mnumber of this.connector?.mnumbers ?? []) {
-      if (!mnumber.mnumber || !mnumber.description) {
+      if (!mnumber.mnumber) {
         return false;
       }
     }

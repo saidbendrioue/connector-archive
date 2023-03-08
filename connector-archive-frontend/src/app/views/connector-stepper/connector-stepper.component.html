@@ -15,6 +15,10 @@
           <input type="text" pInputText id="supplier" [(ngModel)]="currentConnector.supplier" />
         </div>
         <div class="p-field">
+          <label for="coordinates">Coordinates</label>
+          <input type="text" pInputText id="coordinates" [(ngModel)]="currentConnector.coordinates" />
+        </div>
+        <div class="p-field">
           <label for="color">Color</label>
           <p-dropdown id="color" [options]="getConnectorColors()" optionLabel="value" optionValue="value" [(ngModel)]="currentConnector.color"></p-dropdown>
         </div>
@@ -71,5 +75,6 @@
       (click)="previousStep()"></button>
 
     <button pButton pRipple label="{{activeIndex == 5 ? 'Save' : 'Next'}}" class="p-button-primary" (click)="nextStep()"></button>
+    <button pButton pRipple label="Skip & Save" class="p-button-outlined" (click)="saveConnector()"></button>
   </ng-template>
 </p-dialog>

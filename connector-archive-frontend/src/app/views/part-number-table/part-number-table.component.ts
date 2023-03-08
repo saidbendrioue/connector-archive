@@ -26,8 +26,7 @@ export class PartNumberTableComponent {
       []) {
       if (
         !customerPartNumber.customerName ||
-        !customerPartNumber.customerPartNumber ||
-        !customerPartNumber.description
+        !customerPartNumber.customerPartNumber
       ) {
         return false;
       }

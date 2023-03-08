@@ -124,9 +124,10 @@ public class ConnectorController {
         connector.setDescription(connectorPOJO.getDescription());
         connector.setCreationDate(connectorPOJO.getCreationDate());
         connector.setUpdateDate(connectorPOJO.getUpdateDate());
-        connector.setLeak(connector.isLeak());
-        connector.setGender(connector.getGender());
-        connector.setType(connector.getType());
+        connector.setLeak(connectorPOJO.isLeak());
+        connector.setGender(connectorPOJO.getGender());
+        connector.setType(connectorPOJO.getType());
+        connector.setCoordinates(connectorPOJO.getCoordinates());
 
         // update detections
         for(var item : connectorPOJO.getDetections()){

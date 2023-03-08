@@ -48,6 +48,9 @@ public class Connector {
 	@Column(name = "con_type")
 	private String type;
 	
+	@Column(name = "con_coordinates")
+	private String coordinates;
+	
 	@Column(name = "con_leak")
 	private boolean leak;
 	

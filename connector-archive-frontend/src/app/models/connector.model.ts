@@ -14,6 +14,7 @@ export interface Connector {
   gender?: string;
   type?: string;
   leak?: boolean;
+  coordinates?: string;
   description?: string;
   creationDate?: Date;
   updateDate?: Date;

@@ -29,7 +29,7 @@
       <td [pEditableColumn]="item.customerPartNumber" pEditableColumnField="code">
         <p-cellEditor>
           <ng-template pTemplate="input">
-            <input pInputText type="number" [(ngModel)]="item.customerPartNumber" (focusout)="changeCustomerPartNumber()" placeholder="Part Number">
+            <input pInputText type="text" [(ngModel)]="item.customerPartNumber" (focusout)="changeCustomerPartNumber()" placeholder="Part Number">
           </ng-template>
           <ng-template pTemplate="output">
             {{item.customerPartNumber}}
