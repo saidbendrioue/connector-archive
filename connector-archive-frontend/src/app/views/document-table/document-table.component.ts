@@ -52,14 +52,12 @@ export class DocumentTableComponent implements OnInit{
       .getFile(`${ROOT_FOLDER}/${this.connector.id}/${fileName}`)
       .subscribe({
         next:(blob) => {
-          let url = URL.createObjectURL(blob);
-
-          window.open(this._sanitizer.bypassSecurityTrustResourceUrl(`data:image/png;base64,${url}`));
+          var url = window.URL.createObjectURL(blob);
+          var anchor = document.createElement("a");
+          anchor.download = fileName;
+          anchor.href = url;
+          anchor.click();
         },
       });
-  }
-
-  st(url:any){
-    return
   }
 }
